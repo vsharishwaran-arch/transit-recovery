@@ -62,7 +62,7 @@ export const createTicketSession = async (req, res, next) => {
         success: true,
         session,
         paymentLink: paymentLinkData?.short_url || `https://rzp.io/demo/${sessionId}`,
-        qrCode: paymentLinkData?.short_url || `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=upi://pay?pa=tnstc@upi%26am=${amount}`,
+        qrCode: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(paymentLinkData?.short_url || `upi://pay?pa=tnstc@upi&am=${amount}`)}`,
       });
     }
 

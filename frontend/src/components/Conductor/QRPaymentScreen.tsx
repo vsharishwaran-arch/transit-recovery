@@ -13,8 +13,9 @@ const QRPaymentScreen: React.FC = () => {
   const [status, setStatus] = useState<string>(state?.session?.upiStatus || 'pending');
   const [polling, setPolling] = useState(true);
 
-  const qrUrl = state?.qrCode ||
-    `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(state?.paymentLink || 'upi://pay')}`;
+  const amount = state?.session?.amount || 0;
+  const payUrl = state?.paymentLink || `upi://pay?pa=tnstc@upi&am=${amount}`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(payUrl)}`;
 
   useEffect(() => {
     if (!sessionId || !polling) return;
