@@ -34,6 +34,14 @@ const QRPaymentScreen: React.FC = () => {
     return () => clearInterval(interval);
   }, [sessionId, polling]);
 
+  const handleCancel = async () => {
+    if (sessionId && status === 'pending') {
+      try {
+        await conductorApi.cancelTicket(sessionId);
+      } catch {}
+    }
+    navigate('/conductor');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex flex-col items-center justify-center p-4">
@@ -108,7 +116,7 @@ const QRPaymentScreen: React.FC = () => {
         {/* Cancel button */}
         <button
           id="cancelPayment"
-          onClick={() => navigate('/conductor')}
+          onClick={handleCancel}
           className="w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl py-3 transition"
         >
           <X className="w-4 h-4" />

@@ -133,3 +133,18 @@ export const getMyTickets = async (req, res, next) => {
     next(err);
   }
 };
+
+export const cancelTicketSession = async (req, res, next) => {
+  try {
+    const { sessionId } = req.params;
+    const session = await TicketSession.findOne({ sessionId });
+    if (session) {
+      session.upiStatus = 'cancelled';
+      session.providerStatus = 'user_cancelled';
+      await session.save();
+    }
+    res.json({ success: true, session });
+  } catch (err) {
+    next(err);
+  }
+};

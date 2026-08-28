@@ -43,6 +43,11 @@ export const conductorApi = {
       `/conductor/ticket/${sessionId}/status`
     ),
 
+  cancelTicket: (sessionId: string) =>
+    api.patch<{ success: boolean; session: TicketSession }>(
+      `/conductor/ticket/${sessionId}/cancel`
+    ),
+
   getMyTickets: () =>
     api.get<{ success: boolean; tickets: TicketSession[] }>('/conductor/tickets'),
 };
