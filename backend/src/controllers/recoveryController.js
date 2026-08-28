@@ -7,9 +7,9 @@ export const getFailedSessions = async (req, res, next) => {
     const { page = 1, limit = 20 } = req.query;
     const skip = (page - 1) * limit;
 
-    const sessions = await TicketSession.find({
-      upiStatus: { $in: ['failed', 'expired', 'cancelled', 'payment_success_ticket_failed'] },
-    })
+    const query = { upiStatus: { $ne: 'paid' } };
+
+    const sessions = await TicketSession.find(query)
       .populate('routeId')
       .populate('conductorId', 'name employeeId')
       .sort({ createdAt: -1 })
@@ -25,9 +25,7 @@ export const getFailedSessions = async (req, res, next) => {
       })
     );
 
-    const total = await TicketSession.countDocuments({
-      upiStatus: { $in: ['failed', 'expired', 'cancelled', 'payment_success_ticket_failed'] },
-    });
+    const total = await TicketSession.countDocuments(query);
 
     res.json({ success: true, sessions: enriched, total, page: Number(page), limit: Number(limit) });
   } catch (err) {
@@ -39,7 +37,7 @@ export const getStats = async (req, res, next) => {
   try {
     // Revenue at risk
     const failedSessions = await TicketSession.find({
-      upiStatus: { $in: ['failed', 'expired', 'cancelled', 'payment_success_ticket_failed'] },
+      upiStatus: { $ne: 'paid' },
     });
     const amountAtRisk = failedSessions.reduce((sum, s) => sum + s.amount, 0);
 
@@ -52,7 +50,7 @@ export const getStats = async (req, res, next) => {
 
     // Failure breakdown
     const failureBreakdown = await TicketSession.aggregate([
-      { $match: { upiStatus: { $in: ['failed', 'expired', 'cancelled', 'payment_success_ticket_failed'] } } },
+      { $match: { upiStatus: { $ne: 'paid' } } },
       { $group: { _id: '$providerStatus', count: { $sum: 1 } } },
     ]);
 

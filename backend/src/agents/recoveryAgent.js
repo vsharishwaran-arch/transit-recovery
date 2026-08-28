@@ -90,8 +90,8 @@ export const runRecoveryAgent = async ({
   });
 
   try {
-    // Step 2: Query failed TicketSessions
-    const query = { upiStatus: { $in: ['failed', 'expired', 'cancelled', 'payment_success_ticket_failed'] } };
+    // Step 2: Query failed TicketSessions (all unpaid sessions)
+    const query = { upiStatus: { $ne: 'paid' } };
 
     if (routeFilter !== 'all') {
       // routeFilter is a routeNumber string — find the route
