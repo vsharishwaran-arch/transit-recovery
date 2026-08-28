@@ -1,0 +1,75 @@
+name: Transit Recovery CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+
+jobs:
+  backend-syntax:
+    name: Backend Syntax Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install
+
+      - name: Check all backend files
+        working-directory: backend
+        run: |
+          node --check src/config/db.js
+          node --check src/models/Route.js
+          node --check src/models/User.js
+          node --check src/models/TicketSession.js
+          node --check src/models/RecoveryLog.js
+          node --check src/models/BatchRun.js
+          node --check src/utils/auth.js
+          node --check src/utils/llmClient.js
+          node --check src/middlewares/auth.js
+          node --check src/middlewares/errorHandler.js
+          node --check src/agents/recoveryAgent.js
+          node --check src/controllers/authController.js
+          node --check src/controllers/conductorController.js
+          node --check src/controllers/recoveryController.js
+          node --check src/controllers/agentController.js
+          node --check src/routes/authRoutes.js
+          node --check src/routes/conductorRoutes.js
+          node --check src/routes/recoveryRoutes.js
+          node --check src/routes/agentRoutes.js
+          node --check src/server.js
+          echo "✅ All backend files passed syntax check"
+
+  frontend-build:
+    name: Frontend TypeScript + Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm install
+
+      - name: TypeScript check
+        working-directory: frontend
+        run: npx tsc --noEmit
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
