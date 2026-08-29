@@ -76,8 +76,8 @@ export const recoveryApi = {
 
 // ─── Agent API ────────────────────────────────────────────────────────────────
 export const agentApi = {
-  runAgent: (batchSize: number, language: string, routeFilter: string) =>
-    api.post<{ success: boolean; batchRun: BatchRun }>('/agent/run', {
+  runAgent: (batchSize = 20, language = 'hinglish', routeFilter = 'all') =>
+    api.post<{ success: boolean; batchRun: BatchRun; logs?: RecoveryLog[] }>('/agent/run', {
       batchSize,
       language,
       routeFilter,
