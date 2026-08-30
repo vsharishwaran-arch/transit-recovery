@@ -53,9 +53,8 @@ function AnimatedBusIllustration() {
           {/* Top White Roof Strip */}
           <path d="M40,54 C40,40 54,30 70,30 L440,30 C454,30 470,40 470,54 L470,66 L40,66 Z" fill="url(#busRoof)" />
 
-          {/* Destination LED Board */}
+          {/* Destination LED Board (Clean Minimalist LED Glass) */}
           <rect x="355" y="38" width="100" height="20" rx="4" fill="#0F172A" stroke="#38BDF8" strokeWidth="1.5" />
-          <text x="405" y="52" fill="#38BDF8" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">47C · TAMBARAM</text>
 
           {/* Side Passenger Windows */}
           <rect x="65" y="72" width="60" height="42" rx="6" fill="url(#glassGrad)" stroke="#38BDF8" strokeWidth="1" />
@@ -70,9 +69,8 @@ function AnimatedBusIllustration() {
           {/* Front Curved Windshield */}
           <path d="M405,72 L452,72 C462,72 468,80 468,93 L468,114 L405,114 Z" fill="url(#glassGrad)" stroke="#38BDF8" strokeWidth="1.5" />
 
-          {/* TNSTC Yellow Branding Stripe */}
+          {/* Clean Accent Stripe */}
           <rect x="40" y="122" width="430" height="12" fill="#F59E0B" />
-          <text x="215" y="131" fill="#FFFFFF" fontSize="9" fontWeight="900" letterSpacing="2" textAnchor="middle">TNSTC SMART TRANSIT RECOVERY</text>
 
           {/* Front Headlights */}
           <rect x="460" y="126" width="10" height="18" rx="4" fill="#FEF08A" className="animate-headlight" />
@@ -321,19 +319,6 @@ export default function LoginPage({ onLogin }: Props) {
           style={{ background: "#6C5CE7" }} />
         <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full pointer-events-none opacity-20 blur-3xl"
           style={{ background: "#38BDF8" }} />
-
-        {/* Top Header Badge */}
-        <div className="relative z-10 w-full flex justify-between items-center">
-          <div className="flex items-center gap-2 rounded-full px-4 py-1.5"
-            style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(12px)" }}>
-            <div className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse" />
-            <span className="text-white text-[12px] font-bold tracking-wide">TNSTC Digital Operations · Live</span>
-          </div>
-
-          <div className="flex items-center gap-2 text-white/70 text-[12px] font-semibold">
-            <span>Razorpay AI Recovery Track</span>
-          </div>
-        </div>
 
         {/* Central Graphic Area — Animated Bus */}
         <div className="relative z-10 my-auto flex flex-col items-center justify-center w-full">
