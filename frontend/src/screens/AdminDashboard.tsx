@@ -135,17 +135,19 @@ function AgentConfigModal({ onClose, onRun }: { onClose: () => void; onRun: (con
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: "rgba(15,23,42,0.55)", backdropFilter: "blur(4px)" }}>
-      <div className="bg-white rounded-3xl w-full max-w-[480px] mx-4 overflow-hidden" style={{ boxShadow: "0 24px 64px rgba(0,0,0,0.18)" }}>
-        <div className="px-7 pt-7 pb-5 border-b border-[#F1F5F9] flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(15,23,42,0.55)", backdropFilter: "blur(4px)" }}>
+      <div className="bg-white rounded-3xl w-full max-w-[500px] max-h-[90vh] overflow-hidden flex flex-col" style={{ boxShadow: "0 24px 64px rgba(0,0,0,0.18)" }}>
+        {/* Sticky Header */}
+        <div className="px-7 pt-6 pb-4 border-b border-[#F1F5F9] flex items-center justify-between flex-shrink-0">
           <div>
             <h2 className="text-[#0F172A] text-xl font-bold">Configure Recovery Agent</h2>
-            <p className="text-[#94A3B8] text-[13px] mt-0.5">Set parameters for this batch run</p>
+            <p className="text-[#94A3B8] text-[12px] mt-0.5">Set parameters for this batch run</p>
           </div>
           <button onClick={onClose} className="w-8 h-8 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[#64748B] hover:bg-[#E2E8F0] transition-colors text-[13px]">✕</button>
         </div>
 
-        <div className="px-7 py-6 space-y-6">
+        {/* Scrollable Body */}
+        <div className="overflow-y-auto flex-1 px-7 py-5 space-y-5">
           {/* Enhanced Batch Size Increaser UI */}
           <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 space-y-3.5" style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
             <div className="flex items-center justify-between">
@@ -233,7 +235,8 @@ function AgentConfigModal({ onClose, onRun }: { onClose: () => void; onRun: (con
           </div>
         </div>
 
-        <div className="px-7 py-5 flex gap-3">
+        {/* Sticky Footer */}
+        <div className="px-7 py-4 border-t border-[#F1F5F9] flex gap-3 flex-shrink-0 bg-white">
           <button onClick={onClose} className="h-11 px-5 rounded-xl text-[#64748B] text-[13px] font-semibold bg-[#F8FAFC] hover:bg-[#F1F5F9] transition-colors">Cancel</button>
           <button onClick={() => onRun({ batchSize, language: lang, routeFilter: route })} className="flex-1 h-11 rounded-xl text-white text-[13px] font-bold transition-all hover:opacity-90 flex items-center justify-center gap-2" style={{ background: "linear-gradient(135deg, #3B82F6, #1D4ED8)" }}>
             ▶ Run Recovery Agent
