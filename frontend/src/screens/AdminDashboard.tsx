@@ -646,7 +646,28 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   ];
 
   return (
-    <div className="h-full flex overflow-hidden bg-[#F0F4F8]">
+    <div className="h-full flex overflow-hidden bg-[#F0F4F8] relative">
+      {/* Top Floating Pop-up Notification Banner when Agent is Running */}
+      {running && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50 bg-[#0F172A] border border-[#3B82F6] text-white rounded-2xl px-6 py-4 flex items-center gap-4 shadow-2xl"
+          style={{ boxShadow: "0 16px 40px rgba(59,130,246,0.4), 0 0 0 1px rgba(59,130,246,0.5)" }}>
+          <div className="w-10 h-10 rounded-xl bg-[#1D4ED8] flex items-center justify-center text-xl flex-shrink-0">
+            <span className="spin inline-block">🤖</span>
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse" />
+              <p className="text-[14px] font-bold text-white">AI Recovery Agent is Running</p>
+            </div>
+            <p className="text-[12px] text-[#94A3B8] mt-0.5">Scanning failed sessions & generating Gemini LLM recovery messages...</p>
+          </div>
+          <div className="ml-4 pl-4 border-l border-white/10 flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-[#38BDF8] border-t-transparent rounded-full spin" />
+            <span className="text-[12px] font-bold text-[#38BDF8]" style={{ fontFamily: "JetBrains Mono, monospace" }}>Processing</span>
+          </div>
+        </div>
+      )}
+
       {/* Sidebar */}
       <div className="w-[230px] bg-white flex flex-col flex-shrink-0 border-r border-[#E2E8F0]">
         <div className="px-5 py-5 border-b border-[#F1F5F9]">
