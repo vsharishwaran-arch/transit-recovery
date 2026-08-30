@@ -12,25 +12,16 @@ type AppState =
   | { screen: "passenger" };
 
 function MainContent() {
-  const [state, setState] = useState<AppState>({ screen: "login" });
+  const [state, setState] = useState<AppState>(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("view") === "passenger" || params.get("sessionId") || window.location.pathname.includes("/retry")) {
+      return { screen: "passenger" };
+    }
+    return { screen: "login" };
+  });
 
   if (state.screen === "login") {
-    return (
-      <div className="h-full relative">
-        <LoginPage onLogin={(role) => setState({ screen: role })} />
-
-        {/* Passenger retry link — simulates WhatsApp link */}
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-10">
-          <button
-            onClick={() => setState({ screen: "passenger" })}
-            className="flex items-center gap-2 bg-white/10 hover:bg-white/15 border border-white/15 backdrop-blur rounded-full px-4 py-2 text-white/60 text-[11px] font-medium transition-all"
-          >
-            <span className="text-sm">🎫</span>
-            Preview: Passenger Payment Page
-          </button>
-        </div>
-      </div>
-    );
+    return <LoginPage onLogin={(role) => setState({ screen: role })} />;
   }
 
   if (state.screen === "passenger") {
