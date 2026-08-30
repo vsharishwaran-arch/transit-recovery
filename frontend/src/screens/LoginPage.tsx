@@ -10,6 +10,114 @@ const DEMO = {
   conductor: { id: "TNSTC-2891",  pass: "conductor123" },
 };
 
+function AnimatedBusIllustration() {
+  return (
+    <div className="relative w-full max-w-[520px] flex flex-col items-center">
+      {/* Headlight beam blur ambient glow */}
+      <div className="absolute -right-12 top-1/2 -translate-y-1/2 w-48 h-32 pointer-events-none opacity-40 blur-xl"
+        style={{ background: "radial-gradient(ellipse at left, rgba(253, 224, 71, 0.9), transparent 70%)" }} />
+
+      {/* Floating Animated Bus SVG */}
+      <div className="relative w-full animate-bus-float">
+        <svg viewBox="0 0 520 220" className="w-full h-auto drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)]">
+          <defs>
+            <linearGradient id="busBody" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#38BDF8" />
+              <stop offset="50%" stopColor="#0284C7" />
+              <stop offset="100%" stopColor="#0369A1" />
+            </linearGradient>
+            <linearGradient id="busRoof" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#E0F2FE" />
+              <stop offset="100%" stopColor="#BAE6FD" />
+            </linearGradient>
+            <linearGradient id="glassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#1E293B" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#0F172A" stopOpacity="0.95" />
+            </linearGradient>
+            <linearGradient id="headlightBeam" x1="0%" y1="50%" x2="100%" y2="50%">
+              <stop offset="0%" stopColor="#FEF08A" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#FEF08A" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+
+          {/* Headlight Beam Cone */}
+          <polygon points="460,130 520,100 520,165" fill="url(#headlightBeam)" className="animate-headlight" />
+
+          {/* Bus Roof AC Unit */}
+          <rect x="120" y="20" width="180" height="14" rx="5" fill="#E2E8F0" />
+          <rect x="140" y="23" width="140" height="8" rx="3" fill="#64748B" opacity="0.3" />
+
+          {/* Main Bus Chassis Body */}
+          <rect x="40" y="30" width="430" height="125" rx="24" fill="url(#busBody)" />
+          
+          {/* Top White Roof Strip */}
+          <path d="M40,54 C40,40 54,30 70,30 L440,30 C454,30 470,40 470,54 L470,66 L40,66 Z" fill="url(#busRoof)" />
+
+          {/* Destination LED Board */}
+          <rect x="355" y="38" width="100" height="20" rx="4" fill="#0F172A" stroke="#38BDF8" strokeWidth="1.5" />
+          <text x="405" y="52" fill="#38BDF8" fontSize="10" fontWeight="bold" fontFamily="monospace" textAnchor="middle">47C · TAMBARAM</text>
+
+          {/* Side Passenger Windows */}
+          <rect x="65" y="72" width="60" height="42" rx="6" fill="url(#glassGrad)" stroke="#38BDF8" strokeWidth="1" />
+          <rect x="135" y="72" width="60" height="42" rx="6" fill="url(#glassGrad)" stroke="#38BDF8" strokeWidth="1" />
+          <rect x="205" y="72" width="60" height="42" rx="6" fill="url(#glassGrad)" stroke="#38BDF8" strokeWidth="1" />
+          <rect x="275" y="72" width="60" height="42" rx="6" fill="url(#glassGrad)" stroke="#38BDF8" strokeWidth="1" />
+          
+          {/* Conductor & Passenger Door */}
+          <rect x="345" y="72" width="50" height="75" rx="6" fill="url(#glassGrad)" stroke="#38BDF8" strokeWidth="1.5" />
+          <line x1="370" y1="72" x2="370" y2="147" stroke="#38BDF8" strokeWidth="1" opacity="0.6" />
+          
+          {/* Front Curved Windshield */}
+          <path d="M405,72 L452,72 C462,72 468,80 468,93 L468,114 L405,114 Z" fill="url(#glassGrad)" stroke="#38BDF8" strokeWidth="1.5" />
+
+          {/* TNSTC Yellow Branding Stripe */}
+          <rect x="40" y="122" width="430" height="12" fill="#F59E0B" />
+          <text x="215" y="131" fill="#FFFFFF" fontSize="9" fontWeight="900" letterSpacing="2" textAnchor="middle">TNSTC SMART TRANSIT RECOVERY</text>
+
+          {/* Front Headlights */}
+          <rect x="460" y="126" width="10" height="18" rx="4" fill="#FEF08A" className="animate-headlight" />
+          <circle cx="45" cy="136" r="5" fill="#EF4444" />
+
+          {/* Wheel Arch Rear */}
+          <path d="M98,155 A 28 28 0 0 1 154,155 Z" fill="#0F172A" />
+          {/* Wheel Arch Front */}
+          <path d="M348,155 A 28 28 0 0 1 404,155 Z" fill="#0F172A" />
+
+          {/* Rear Wheel (Spinning) */}
+          <g transform="translate(126, 155)">
+            <circle cx="0" cy="0" r="22" fill="#1E293B" stroke="#475569" strokeWidth="3" />
+            <circle cx="0" cy="0" r="14" fill="#94A3B8" />
+            <g className="animate-wheel-spin">
+              <line x1="0" y1="-14" x2="0" y2="14" stroke="#0F172A" strokeWidth="3" />
+              <line x1="-14" y1="0" x2="14" y2="0" stroke="#0F172A" strokeWidth="3" />
+            </g>
+            <circle cx="0" cy="0" r="5" fill="#38BDF8" />
+          </g>
+
+          {/* Front Wheel (Spinning) */}
+          <g transform="translate(376, 155)">
+            <circle cx="0" cy="0" r="22" fill="#1E293B" stroke="#475569" strokeWidth="3" />
+            <circle cx="0" cy="0" r="14" fill="#94A3B8" />
+            <g className="animate-wheel-spin">
+              <line x1="0" y1="-14" x2="0" y2="14" stroke="#0F172A" strokeWidth="3" />
+              <line x1="-14" y1="0" x2="14" y2="0" stroke="#0F172A" strokeWidth="3" />
+            </g>
+            <circle cx="0" cy="0" r="5" fill="#38BDF8" />
+          </g>
+        </svg>
+      </div>
+
+      {/* Animated Dash Road Lines */}
+      <div className="w-full max-w-[480px] mt-1 flex justify-center">
+        <svg viewBox="0 0 480 20" className="w-full h-5">
+          <line x1="0" y1="10" x2="480" y2="10" stroke="#475569" strokeWidth="4" />
+          <line x1="0" y1="10" x2="480" y2="10" stroke="#38BDF8" strokeWidth="4" className="animate-road" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
 export default function LoginPage({ onLogin }: Props) {
   const { login } = useAuth();
   const [role,     setRole]     = useState<Role>(null);
@@ -40,27 +148,15 @@ export default function LoginPage({ onLogin }: Props) {
   const violet = "#6C5CE7";
 
   return (
-    <div className="min-h-full overflow-auto flex items-center justify-center p-6"
-      style={{ background: "linear-gradient(135deg, #EDE8FB 0%, #E4DDF5 50%, #EAE4F7 100%)" }}>
-
-      {/* Background blobs */}
-      <div className="fixed top-0 left-0 w-80 h-80 rounded-full pointer-events-none"
-        style={{ background: "rgba(108,92,231,0.12)", filter: "blur(80px)", transform: "translate(-40%, -40%)" }} />
-      <div className="fixed bottom-0 right-0 w-72 h-72 rounded-full pointer-events-none"
-        style={{ background: "rgba(108,92,231,0.10)", filter: "blur(60px)", transform: "translate(40%, 40%)" }} />
-
-      {/* Card */}
-      <div className="relative flex w-full max-w-[960px] rounded-3xl overflow-hidden"
-        style={{ boxShadow: "0 32px 80px rgba(108,92,231,0.22), 0 4px 20px rgba(0,0,0,0.08)" }}>
-
-        {/* ── LEFT — white form ───────────────────────────────── */}
-        <div className="flex-1 bg-white flex flex-col items-center justify-center px-10 py-10">
-
+    <div className="w-screen h-screen min-h-screen flex overflow-hidden bg-[#0F172A]">
+      {/* ── LEFT COLUMN — Form & Login Controls (Full Screen Height) ──────────── */}
+      <div className="w-full lg:w-[480px] xl:w-[540px] h-full bg-white flex flex-col justify-between px-8 xl:px-12 py-8 z-10 overflow-y-auto flex-shrink-0">
+        <div>
           {/* Brand */}
-          <div className="w-full mb-6 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+          <div className="w-full mb-8 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-md"
               style={{ background: `linear-gradient(135deg, ${violet}, #4F46E5)` }}>
-              <svg width="18" height="18" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
+              <svg width="20" height="20" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
                 <rect x="1" y="3" width="15" height="13" rx="2"/>
                 <path d="M16 8h2l4 4v3h-6V8z"/>
                 <circle cx="5.5" cy="18.5" r="2.5"/>
@@ -68,30 +164,30 @@ export default function LoginPage({ onLogin }: Props) {
               </svg>
             </div>
             <div>
-              <p className="text-[#1E1B4B] text-[15px] font-black leading-none">TNSTC</p>
-              <p className="text-[10px] mt-0.5 font-medium" style={{ color: "#A78BFA" }}>Transit Recovery Agent</p>
+              <p className="text-[#1E1B4B] text-[16px] font-black leading-none">TNSTC</p>
+              <p className="text-[11px] mt-0.5 font-bold tracking-wide" style={{ color: "#A78BFA" }}>Transit Recovery Agent</p>
             </div>
           </div>
 
           {/* Heading */}
-          <div className="w-full mb-5">
-            <h1 className="text-[#1E1B4B] text-[32px] font-black tracking-tight leading-none mb-1.5">LOGIN</h1>
-            <p className="text-[#94A3B8] text-[13px]">Sign in to the TNSTC digital operations portal</p>
+          <div className="w-full mb-6">
+            <h1 className="text-[#1E1B4B] text-[34px] font-black tracking-tight leading-none mb-2">LOGIN</h1>
+            <p className="text-[#64748B] text-[13px]">Sign in to the TNSTC digital operations portal</p>
           </div>
 
           {/* Form */}
-          <form onSubmit={submit} className="w-full space-y-3">
+          <form onSubmit={submit} className="w-full space-y-3.5">
             {/* Employee ID */}
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#A78BFA" }}>
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
                 </svg>
               </div>
               <input value={empId} onChange={e => { setEmpId(e.target.value); setError(""); }}
                 placeholder="Employee / Admin ID"
-                className="w-full h-[52px] rounded-2xl pl-11 pr-4 text-[#1E1B4B] text-[14px] outline-none transition-all placeholder:text-[#C4B5FD] border-2 border-transparent font-medium"
+                className="w-full h-[54px] rounded-2xl pl-12 pr-4 text-[#1E1B4B] text-[14px] outline-none transition-all placeholder:text-[#C4B5FD] border-2 border-transparent font-medium"
                 style={{ background: "#F3F0FF", fontFamily: "JetBrains Mono, monospace" }}
                 onFocus={e => { e.target.style.borderColor = violet; e.target.style.background = "#EDE8FB"; }}
                 onBlur={e => { e.target.style.borderColor = "transparent"; e.target.style.background = "#F3F0FF"; }}
@@ -101,7 +197,7 @@ export default function LoginPage({ onLogin }: Props) {
             {/* Password */}
             <div className="relative">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#A78BFA" }}>
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <rect x="3" y="11" width="18" height="11" rx="2"/>
                   <path d="M7 11V7a5 5 0 0110 0v4"/>
                 </svg>
@@ -109,14 +205,14 @@ export default function LoginPage({ onLogin }: Props) {
               <input type={showPass ? "text" : "password"} value={pass}
                 onChange={e => { setPass(e.target.value); setError(""); }}
                 placeholder="Password"
-                className="w-full h-[52px] rounded-2xl pl-11 pr-12 text-[#1E1B4B] text-[14px] outline-none transition-all placeholder:text-[#C4B5FD] border-2 border-transparent"
+                className="w-full h-[54px] rounded-2xl pl-12 pr-12 text-[#1E1B4B] text-[14px] outline-none transition-all placeholder:text-[#C4B5FD] border-2 border-transparent"
                 style={{ background: "#F3F0FF" }}
                 onFocus={e => { e.target.style.borderColor = violet; e.target.style.background = "#EDE8FB"; }}
                 onBlur={e => { e.target.style.borderColor = "transparent"; e.target.style.background = "#F3F0FF"; }}
               />
               <button type="button" onClick={() => setShowPass(!showPass)}
                 className="absolute right-4 top-1/2 -translate-y-1/2 transition-colors" style={{ color: "#C4B5FD" }}>
-                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   {showPass
                     ? <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>
                     : <><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></>}
@@ -137,22 +233,22 @@ export default function LoginPage({ onLogin }: Props) {
 
             {/* Submit */}
             <button type="submit" disabled={loading}
-              className="w-full h-[52px] rounded-2xl text-white text-[15px] font-bold tracking-wide transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-60"
-              style={{ background: `linear-gradient(135deg, ${violet}, #4F46E5)`, boxShadow: "0 8px 24px rgba(108,92,231,0.32)" }}>
+              className="w-full h-[54px] rounded-2xl text-white text-[15px] font-bold tracking-wide transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-60"
+              style={{ background: `linear-gradient(135deg, ${violet}, #4F46E5)`, boxShadow: "0 8px 24px rgba(108,92,231,0.35)" }}>
               {loading ? "Signing in..." : "SIGN IN"}
             </button>
           </form>
 
           {/* Divider */}
-          <div className="w-full flex items-center gap-3 my-4">
+          <div className="w-full flex items-center gap-3 my-5">
             <div className="flex-1 h-px" style={{ background: "#EDE8FB" }} />
             <span className="text-[12px] text-[#94A3B8]">
-              <span className="font-bold text-[#1E1B4B]">Login</span> with Role
+              <span className="font-bold text-[#1E1B4B]">Quick Login</span> with Role
             </span>
             <div className="flex-1 h-px" style={{ background: "#EDE8FB" }} />
           </div>
 
-          {/* Role rows — mirrors "Login with google / Login with Facebook" from reference */}
+          {/* Role rows */}
           <div className="w-full space-y-3">
             {(["admin", "conductor"] as const).map((r) => {
               const active = role === r;
@@ -209,116 +305,73 @@ export default function LoginPage({ onLogin }: Props) {
               );
             })}
           </div>
-
-          <p className="mt-6 text-[#CBD5E1] text-[10px] text-center">© 2026 Tamil Nadu State Transport Corporation</p>
         </div>
 
-        {/* ── RIGHT — bus photo + violet overlay ──────────────── */}
-        <div className="relative overflow-hidden flex flex-col items-center justify-center"
-          style={{
-            width: 420,
-            flexShrink: 0,
-            backgroundImage: `linear-gradient(145deg, rgba(108,92,231,0.88) 0%, rgba(76,60,158,0.92) 50%, rgba(30,27,75,0.96) 100%), url(https://images.unsplash.com/photo-1632276536839-84cad7fd03b0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=800)`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}>
+        <p className="pt-6 text-[#94A3B8] text-[11px] text-center">© 2026 Tamil Nadu State Transport Corporation</p>
+      </div>
 
-          {/* Subtle wave overlay */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none"
-            viewBox="0 0 420 580" preserveAspectRatio="xMidYMid slice">
-            <path d="M-40 160 Q120 50 280 160 Q440 270 600 160" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="65"/>
-            <path d="M-40 310 Q120 200 280 310 Q440 420 600 310" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="50"/>
-            <path d="M-40 460 Q120 350 280 460 Q440 570 600 460" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="40"/>
-          </svg>
+      {/* ── RIGHT COLUMN — Full Screen Hero with Animated Bus Graphic ───────────────── */}
+      <div className="flex-1 relative hidden lg:flex flex-col items-center justify-between p-12 overflow-hidden"
+        style={{
+          background: "linear-gradient(135deg, #1E1B4B 0%, #312E81 40%, #4C3C9E 100%)",
+        }}>
 
-          {/* Floating accent dots */}
-          <div className="absolute top-8 right-8 w-3 h-3 rounded-full"   style={{ background: "rgba(255,255,255,0.22)" }} />
-          <div className="absolute top-20 right-24 w-2 h-2 rounded-full" style={{ background: "rgba(255,255,255,0.16)" }} />
-          <div className="absolute bottom-20 left-10 w-4 h-4 rounded-full" style={{ background: "rgba(255,255,255,0.15)" }} />
-          <div className="absolute top-1/3 right-4 w-1.5 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.20)" }} />
+        {/* Ambient background glows */}
+        <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full pointer-events-none opacity-30 blur-3xl"
+          style={{ background: "#6C5CE7" }} />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full pointer-events-none opacity-20 blur-3xl"
+          style={{ background: "#38BDF8" }} />
 
-          {/* TNSTC top badge */}
-          <div className="absolute top-7 left-0 right-0 flex justify-center">
-            <div className="flex items-center gap-2 rounded-full px-4 py-1.5"
-              style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.20)", backdropFilter: "blur(8px)" }}>
-              <div className="w-2 h-2 rounded-full" style={{ background: "#A7F3D0" }} />
-              <span className="text-white text-[11px] font-bold tracking-wide">TNSTC Digital Operations</span>
-            </div>
+        {/* Top Header Badge */}
+        <div className="relative z-10 w-full flex justify-between items-center">
+          <div className="flex items-center gap-2 rounded-full px-4 py-1.5"
+            style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(12px)" }}>
+            <div className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse" />
+            <span className="text-white text-[12px] font-bold tracking-wide">TNSTC Digital Operations · Live</span>
           </div>
 
-          {/* Central glass card */}
-          <div className="relative z-10 mx-8 w-full mt-6">
+          <div className="flex items-center gap-2 text-white/70 text-[12px] font-semibold">
+            <span>Razorpay AI Recovery Track</span>
+          </div>
+        </div>
 
-            {/* Lightning badge on left edge */}
-            <div className="absolute -left-5 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white flex items-center justify-center z-20"
-              style={{ boxShadow: "0 6px 20px rgba(0,0,0,0.30)" }}>
-              <svg width="20" height="20" fill="#F59E0B" viewBox="0 0 24 24">
-                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-              </svg>
+        {/* Central Graphic Area — Animated Bus */}
+        <div className="relative z-10 my-auto flex flex-col items-center justify-center w-full">
+          <AnimatedBusIllustration />
+
+          {/* Stats Glassmorphic Panel */}
+          <div className="w-full max-w-[500px] mt-8 rounded-3xl p-6"
+            style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.15)", backdropFilter: "blur(16px)" }}>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="text-white text-[17px] font-black">AI-Powered Revenue Recovery</p>
+                <p className="text-[12px] text-[#C4B5FD] mt-0.5">Automated UPI failure resolution for Tamil Nadu state transit</p>
+              </div>
+              <span className="bg-[#10B981]/20 text-[#34D399] border border-[#10B981]/30 text-[11px] font-bold px-3 py-1 rounded-full">
+                Active
+              </span>
             </div>
 
-            <div className="rounded-3xl overflow-hidden"
-              style={{ background: "rgba(255,255,255,0.11)", border: "1px solid rgba(255,255,255,0.22)", backdropFilter: "blur(20px)" }}>
-
-              {/* Bus photo inside card */}
-              <div className="relative h-[170px] overflow-hidden">
-                <img
-                  src="https://images.unsplash.com/photo-1557223562-6c77ef16210f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600"
-                  alt="TNSTC Bus"
-                  className="w-full h-full object-cover"
-                  style={{ filter: "brightness(0.75) saturate(1.1)" }}
-                />
-                {/* Gradient fade into card */}
-                <div className="absolute inset-0"
-                  style={{ background: "linear-gradient(to bottom, transparent 40%, rgba(60,46,120,0.85) 100%)" }} />
-                {/* Overlay text */}
-                <div className="absolute bottom-4 left-5 right-5">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-[10px] font-black uppercase tracking-widest"
-                      style={{ color: "#A7F3D0" }}>Live Route</span>
-                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: "#A7F3D0" }} />
-                    <span className="text-[10px] text-white/70">Koyambedu → Tambaram</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="bg-white/20 text-white text-[11px] font-black px-2.5 py-0.5 rounded-full border border-white/25">47C</span>
-                    <span className="text-white/60 text-[11px]">TN01-AB-1234</span>
-                  </div>
+            <div className="grid grid-cols-3 gap-3 pt-3 border-t border-white/10">
+              {[
+                { val: "₹4.2L+", label: "Recovered" },
+                { val: "85%",    label: "Dropout Fixed" },
+                { val: "28",     label: "Routes Active" },
+              ].map((s) => (
+                <div key={s.label} className="bg-white/5 rounded-2xl p-3 text-center border border-white/5">
+                  <p className="text-white font-black text-[18px]" style={{ fontFamily: "JetBrains Mono, monospace" }}>{s.val}</p>
+                  <p className="text-[10px] text-[#A78BFA] font-semibold uppercase mt-0.5">{s.label}</p>
                 </div>
-              </div>
-
-              {/* Text content */}
-              <div className="px-6 py-5">
-                <p className="text-white text-[16px] font-black mb-1">AI-Powered Revenue Recovery</p>
-                <p className="text-[12px] leading-relaxed" style={{ color: "#C4B5FD" }}>
-                  Automatically recover failed payments and reduce revenue loss across the Tamil Nadu bus network.
-                </p>
-              </div>
-
-              {/* Stats strip */}
-              <div className="grid grid-cols-3" style={{ borderTop: "1px solid rgba(255,255,255,0.10)" }}>
-                {[
-                  { val: "₹4.2L", label: "Recovered" },
-                  { val: "44%",   label: "Success Rate" },
-                  { val: "28",    label: "Routes" },
-                ].map((s, i) => (
-                  <div key={s.label} className="flex flex-col items-center py-4"
-                    style={{ borderRight: i < 2 ? "1px solid rgba(255,255,255,0.08)" : "none" }}>
-                    <p className="text-white font-black text-[18px] leading-none"
-                      style={{ fontFamily: "JetBrains Mono, monospace" }}>{s.val}</p>
-                    <p className="text-[9px] mt-1 font-semibold uppercase tracking-wide" style={{ color: "#C4B5FD" }}>{s.label}</p>
-                  </div>
-                ))}
-              </div>
+              ))}
             </div>
           </div>
+        </div>
 
-          {/* Bottom tagline */}
-          <div className="mt-7 px-8 text-center">
-            <p className="text-white/90 text-[13px] font-semibold">
-              Serving <span className="text-[#A7F3D0] font-black">4.2 Crore</span> passengers daily
-            </p>
-            <p className="text-white/40 text-[10px] mt-1">Tamil Nadu State Transport Corporation · Est. 1972</p>
-          </div>
+        {/* Bottom Tagline */}
+        <div className="relative z-10 w-full text-center">
+          <p className="text-white/80 text-[13px] font-medium">
+            Powering smart digital transit for <span className="text-[#38BDF8] font-bold">4.2 Crore daily commuters</span>
+          </p>
         </div>
       </div>
     </div>

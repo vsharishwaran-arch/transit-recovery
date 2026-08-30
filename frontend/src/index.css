@@ -69,3 +69,42 @@ body {
 .spin {
   animation: spin 1s linear infinite;
 }
+
+/* Animated Bus Keyframes */
+@keyframes bus-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-bus-float {
+  animation: bus-float 3.5s ease-in-out infinite;
+}
+
+@keyframes bus-wheel-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-wheel-spin {
+  animation: bus-wheel-spin 1.2s linear infinite;
+}
+
+@keyframes road-move {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -40; }
+}
+
+.animate-road {
+  stroke-dasharray: 12 12;
+  animation: road-move 0.8s linear infinite;
+}
+
+@keyframes headlight-glow {
+  0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 12px rgba(253, 224, 71, 0.9)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 24px rgba(253, 224, 71, 1)); }
+}
+
+.animate-headlight {
+  animation: headlight-glow 2s ease-in-out infinite;
+}
+
