@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Fragment } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
@@ -137,23 +137,74 @@ function AgentConfigModal({ onClose, onRun }: { onClose: () => void; onRun: (con
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ background: "rgba(15,23,42,0.55)", backdropFilter: "blur(4px)" }}>
       <div className="bg-white rounded-3xl w-full max-w-[480px] mx-4 overflow-hidden" style={{ boxShadow: "0 24px 64px rgba(0,0,0,0.18)" }}>
-        <div className="px-7 pt-7 pb-5">
-          <div className="flex items-center justify-between mb-1">
+        <div className="px-7 pt-7 pb-5 border-b border-[#F1F5F9] flex items-center justify-between">
+          <div>
             <h2 className="text-[#0F172A] text-xl font-bold">Configure Recovery Agent</h2>
-            <button onClick={onClose} className="w-8 h-8 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[#64748B] hover:bg-[#E2E8F0] transition-colors text-[13px]">✕</button>
+            <p className="text-[#94A3B8] text-[13px] mt-0.5">Set parameters for this batch run</p>
           </div>
-          <p className="text-[#94A3B8] text-[13px]">Set parameters for this batch run</p>
+          <button onClick={onClose} className="w-8 h-8 rounded-full bg-[#F1F5F9] flex items-center justify-center text-[#64748B] hover:bg-[#E2E8F0] transition-colors text-[13px]">✕</button>
         </div>
 
-        <div className="px-7 pb-2 space-y-5">
-          <div>
-            <div className="flex justify-between mb-2">
-              <label className="text-[#0F172A] text-[13px] font-semibold">Batch Size</label>
-              <span className="text-[#3B82F6] text-[13px] font-bold" style={{ fontFamily: "JetBrains Mono, monospace" }}>{batchSize}</span>
+        <div className="px-7 py-6 space-y-6">
+          {/* Enhanced Batch Size Increaser UI */}
+          <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 space-y-3.5" style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.03)" }}>
+            <div className="flex items-center justify-between">
+              <label className="text-[#0F172A] text-[13px] font-bold">Batch Size</label>
+              <div className="flex items-center gap-1.5 bg-[#EFF6FF] border border-[#BFDBFE] rounded-full px-3 py-1">
+                <span className="text-[#1D4ED8] text-[13px] font-black" style={{ fontFamily: "JetBrains Mono, monospace" }}>{batchSize}</span>
+                <span className="text-[#3B82F6] text-[11px] font-medium">sessions</span>
+              </div>
             </div>
-            <input type="range" min={5} max={50} step={5} value={batchSize} onChange={e => setBatchSize(+e.target.value)}
-              className="w-full h-1.5 rounded-full appearance-none cursor-pointer" style={{ accentColor: "#3B82F6" }} />
-            <p className="text-[#94A3B8] text-[11px] mt-1.5">Processes up to {batchSize} failed sessions per run</p>
+
+            {/* Stepper controls + Styled Range slider */}
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setBatchSize(Math.max(5, batchSize - 5))}
+                className="w-9 h-9 rounded-xl bg-white border border-[#CBD5E1] text-[#1E293B] font-bold text-[16px] hover:bg-[#F1F5F9] active:scale-95 transition-all flex items-center justify-center shadow-sm"
+                title="Decrease batch size by 5"
+              >
+                −
+              </button>
+
+              <div className="flex-1 relative flex items-center">
+                <input
+                  type="range"
+                  min={5}
+                  max={50}
+                  step={5}
+                  value={batchSize}
+                  onChange={e => setBatchSize(+e.target.value)}
+                  className="w-full h-2 rounded-lg bg-[#E2E8F0] appearance-none cursor-pointer accent-[#3B82F6]"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setBatchSize(Math.min(50, batchSize + 5))}
+                className="w-9 h-9 rounded-xl bg-[#3B82F6] text-white font-bold text-[16px] hover:bg-[#2563EB] active:scale-95 transition-all flex items-center justify-center shadow-sm"
+                title="Increase batch size by 5"
+              >
+                +
+              </button>
+            </div>
+
+            {/* Quick preset selector pills */}
+            <div className="flex items-center justify-between gap-2 pt-2 border-t border-[#E2E8F0]">
+              <span className="text-[#94A3B8] text-[10px] uppercase font-bold tracking-wider">Quick Presets:</span>
+              <div className="flex gap-1.5">
+                {[10, 20, 30, 50].map(val => (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={() => setBatchSize(val)}
+                    className={`px-3 py-1 rounded-lg text-[11px] font-bold transition-all ${batchSize === val ? "bg-[#3B82F6] text-white shadow-sm" : "bg-white border border-[#E2E8F0] text-[#64748B] hover:text-[#1E293B] hover:border-[#CBD5E1]"}`}
+                  >
+                    {val}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div>
@@ -352,30 +403,64 @@ function FailedSessionsTab({ sessions }: { sessions: TicketSession[] }) {
                 const from = routeObj?.from || "Koyambedu";
                 const to = routeObj?.to || "Tambaram";
                 const failureType = s.providerStatus === "timeout" ? (s.vehicleSpeed > 40 ? "network_handoff" : "peak_load") : (s.providerStatus || "user_cancelled");
+                const isExpanded = expanded === s._id;
+                const aiMsg = s.latestLog?.aiMessage || `Arre passenger, aapki ₹${s.amount} ki payment Bus ${s.busNumber} (Route ${routeNum}) mein retry karein: https://pay.tnstc.in/retry/${s.sessionId}`;
+                const aiLang = s.latestLog?.messageLanguage || "hinglish";
 
                 return (
-                  <tr key={s._id} className="border-t border-[#F8FAFC] hover:bg-[#FAFBFF] transition-colors">
-                    <td className="px-4 py-3.5 text-[12px] font-bold text-[#0F172A] whitespace-nowrap" style={{ fontFamily: "JetBrains Mono, monospace" }}>{s.busNumber}</td>
-                    <td className="px-4 py-3.5">
-                      <p className="text-[12px] text-[#1E293B] font-medium">{from} → {to}</p>
-                      <p className="text-[10px] text-[#94A3B8] mt-0.5">Route {routeNum} · {s.vehicleSpeed || 0} km/h</p>
-                    </td>
-                    <td className="px-4 py-3.5 text-[14px] font-bold text-[#0F172A]" style={{ fontFamily: "JetBrains Mono, monospace" }}>₹{s.amount}</td>
-                    <td className="px-4 py-3.5"><FailureBadge type={failureType} /></td>
-                    <td className="px-4 py-3.5">
-                      <span className={`text-[11px] font-semibold capitalize ${s.passengerLoad === "overcrowded" ? "text-red-500" : s.passengerLoad === "high" ? "text-orange-500" : "text-[#94A3B8]"}`}>{s.passengerLoad || "medium"}</span>
-                    </td>
-                    <td className="px-4 py-3.5"><StatusBadge status={s.upiStatus} /></td>
-                    <td className="px-4 py-3.5">
-                      {s.latestLog?.aiMessage ? (
-                        <button onClick={() => setExpanded(expanded === s._id ? null : s._id)} className="text-[#3B82F6] text-[12px] font-semibold hover:underline whitespace-nowrap">
-                          AI Msg {expanded === s._id ? "▲" : "▾"}
+                  <Fragment key={s._id}>
+                    <tr className="border-t border-[#F8FAFC] hover:bg-[#FAFBFF] transition-colors">
+                      <td className="px-4 py-3.5 text-[12px] font-bold text-[#0F172A] whitespace-nowrap" style={{ fontFamily: "JetBrains Mono, monospace" }}>{s.busNumber}</td>
+                      <td className="px-4 py-3.5">
+                        <p className="text-[12px] text-[#1E293B] font-medium">{from} → {to}</p>
+                        <p className="text-[10px] text-[#94A3B8] mt-0.5">Route {routeNum} · {s.vehicleSpeed || 0} km/h</p>
+                      </td>
+                      <td className="px-4 py-3.5 text-[14px] font-bold text-[#0F172A]" style={{ fontFamily: "JetBrains Mono, monospace" }}>₹{s.amount}</td>
+                      <td className="px-4 py-3.5"><FailureBadge type={failureType} /></td>
+                      <td className="px-4 py-3.5">
+                        <span className={`text-[11px] font-semibold capitalize ${s.passengerLoad === "overcrowded" ? "text-red-500" : s.passengerLoad === "high" ? "text-orange-500" : "text-[#94A3B8]"}`}>{s.passengerLoad || "medium"}</span>
+                      </td>
+                      <td className="px-4 py-3.5"><StatusBadge status={s.upiStatus} /></td>
+                      <td className="px-4 py-3.5">
+                        <button onClick={() => setExpanded(isExpanded ? null : s._id)} className="text-[#3B82F6] text-[12px] font-semibold hover:underline whitespace-nowrap flex items-center gap-1">
+                          <span>AI Msg</span>
+                          <span>{isExpanded ? "▲" : "▾"}</span>
                         </button>
-                      ) : (
-                        <span className="text-[#94A3B8] text-[11px]">Ready</span>
-                      )}
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
+                    {isExpanded && (
+                      <tr className="border-t border-[#F1F5F9] bg-[#F0F7FF]">
+                        <td colSpan={7} className="px-6 py-4">
+                          <div className="bg-white border border-[#BFDBFE] rounded-2xl p-4 space-y-3 shadow-sm">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="bg-[#1D4ED8] text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">Gemini AI Prompt</span>
+                                <LangBadge lang={aiLang} />
+                              </div>
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(aiMsg);
+                                  alert("Copied AI Message to clipboard!");
+                                }}
+                                className="text-[11px] text-[#3B82F6] font-semibold hover:underline flex items-center gap-1"
+                              >
+                                📋 Copy Message
+                              </button>
+                            </div>
+
+                            <p className="text-[#1E293B] text-[13px] italic font-medium leading-relaxed bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl p-3">
+                              "{aiMsg}"
+                            </p>
+
+                            <div className="flex items-center justify-between text-[11px] text-[#64748B]">
+                              <span>Detected Reason: <strong>{FAILURE_LABELS[failureType] || failureType}</strong></span>
+                              <span>Session Ref: <strong style={{ fontFamily: "JetBrains Mono, monospace" }}>{s.sessionId}</strong></span>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
                 );
               })
             )}
