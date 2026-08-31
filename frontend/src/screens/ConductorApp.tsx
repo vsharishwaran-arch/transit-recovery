@@ -3,6 +3,7 @@ import { conductorApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import type { TicketSession } from "../types/transit";
 import PTPModal from "../components/Conductor/PTPModal";
+import Spinner from "../components/Common/Spinner";
 
 type ConductorView = "ticket" | "qr" | "failed";
 
@@ -181,8 +182,17 @@ function TicketForm({ onGenerate }: { onGenerate: (data: { session: TicketSessio
           <button onClick={handleCreateTicket} disabled={loading}
             className="w-full max-w-[240px] mx-auto h-[56px] rounded-2xl text-white text-[15px] font-black transition-all hover:opacity-90 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
             style={{ background: "linear-gradient(135deg, #1A56DB, #1D4ED8)", boxShadow: "0 8px 24px rgba(26,86,219,0.35)" }}>
-            {loading ? "Generating..." : "Generate Ticket"}
-            <svg width="18" height="18" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            {loading ? (
+              <>
+                <Spinner size={18} color="white" />
+                Generating...
+              </>
+            ) : (
+              <>
+                Generate Ticket
+                <svg width="18" height="18" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </>
+            )}
           </button>
 
           <p className="text-[#94A3B8] text-[11px] text-center">
@@ -420,8 +430,14 @@ export default function ConductorApp({ onLogout }: { onLogout: () => void }) {
   const { user } = useAuth();
   const [view, setView] = useState<ConductorView>("ticket");
   const [ticketData, setTicketData] = useState<{ session: TicketSession; paymentLink: string; qrCode: string } | null>(null);
+  const [loggingOut, setLoggingOut] = useState(false);
 
-  const busNumber = user?.assignedBus || "TN01-AB-1234";
+  function handleLogout() {
+    setLoggingOut(true);
+    setTimeout(() => {
+      onLogout();
+    }, 350);
+  }
 
   return (
     <div className="h-full flex flex-col bg-[#F0F4F8]">
@@ -434,70 +450,64 @@ export default function ConductorApp({ onLogout }: { onLogout: () => void }) {
           <div>
             <p className="text-[#0F172A] text-[13px] font-bold leading-none">TNSTC Terminal</p>
             <p className="text-[#94A3B8] text-[10px]">Conductor Portal</p>
+            <span className="text-[#0F172A] font-black text-[15px]">TNSTC POS</span>
+            <span className="ml-2 text-[#94A3B8] text-[12px]">Conductor Terminal</span>
           </div>
         </div>
 
-        {/* Bus badge */}
-        <div className="flex items-center gap-2 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-2 mr-4">
-          <svg width="14" height="14" fill="none" stroke="#3B82F6" strokeWidth="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h2l4 4v3h-6V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-          <span className="text-[#0F172A] text-[12px] font-bold" style={{ fontFamily: "JetBrains Mono, monospace" }}>{busNumber}</span>
-        </div>
-        <div className="flex items-center gap-1.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-[#059669]" />
-          <span className="text-[#64748B] text-[12px]">47C · Koyambedu → Tambaram</span>
-        </div>
-
-        {/* View tabs — 3D Glossy Animated Buttons */}
-        <div className="flex items-center gap-3 ml-6">
-          {([
-            { id: "ticket" as ConductorView, label: "Issue Ticket" },
-            { id: "qr"     as ConductorView, label: "QR Payment" },
-            { id: "failed" as ConductorView, label: "Failed Card" },
-          ]).map(t => (
-            <button
-              key={t.id}
-              onClick={() => setView(t.id)}
-              className={`Btn ${view === t.id ? "" : "Btn-inactive"}`}
-            >
+        {/* Center: Tabs */}
+        <div className="flex items-center gap-1 bg-[#F1F5F9] p-1 rounded-2xl">
+          {[
+            { id: "ticket" as const, label: "Issue Ticket" },
+            { id: "qr"     as const, label: "QR Payment",  disabled: !ticketData },
+            { id: "failed" as const, label: "Failed Card", disabled: !ticketData },
+          ].map(t => (
+            <button key={t.id} onClick={() => !t.disabled && setView(t.id)} disabled={t.disabled}
+              className={`px-4 py-1.5 rounded-xl text-[13px] font-bold transition-all ${view === t.id ? "bg-white text-[#1A56DB] shadow-sm" : "text-[#64748B] hover:text-[#0F172A]"} disabled:opacity-40 disabled:cursor-not-allowed`}>
               {t.label}
             </button>
           ))}
         </div>
 
-        <div className="flex-1" />
+        {/* Right: Profile & Logout */}
+        <div className="flex items-center">
+          <div className="flex items-center px-3 py-1.5 bg-white rounded-2xl shadow-md border border-[#E2E8F0] mr-2">
+            <section className="flex justify-center items-center w-9 h-9 rounded-full shadow-md bg-gradient-to-r from-[#F9C97C] to-[#A2E9C1] hover:from-[#C9A9E9] hover:to-[#7EE7FC] hover:cursor-pointer hover:scale-105 transition-all duration-300 flex-shrink-0">
+              <svg viewBox="0 0 15 15" className="w-4 h-4 fill-gray-700">
+                <path d="M7.5 0.875C5.49797 0.875 3.875 2.49797 3.875 4.5C3.875 6.15288 4.98124 7.54738 6.49373 7.98351C5.2997 8.12901 4.27557 8.55134 3.50407 9.31167C2.52216 10.2794 2.02502 11.72 2.02502 13.5999C2.02502 13.8623 2.23769 14.0749 2.50002 14.0749C2.76236 14.0749 2.97502 13.8623 2.97502 13.5999C2.97502 11.8799 3.42786 10.7206 4.17091 9.9883C4.91536 9.25463 6.02674 8.87499 7.49995 8.87499C8.97317 8.87499 10.0846 9.25463 10.8291 9.98831C11.5721 10.7206 12.025 11.8799 12.025 13.5999C12.025 13.8623 12.2376 14.0749 12.5 14.0749C12.7623 14.075 12.975 13.8623 12.975 13.6C12.975 11.72 12.4778 10.2794 11.4959 9.31166C10.7244 8.55135 9.70025 8.12903 8.50625 7.98352C10.0187 7.5474 11.125 6.15289 11.125 4.5C11.125 2.49797 9.50203 0.875 7.5 0.875ZM4.825 4.5C4.825 3.02264 6.02264 1.825 7.5 1.825C8.97736 1.825 10.175 3.02264 10.175 4.5C10.175 5.97736 8.97736 7.175 7.5 7.175C6.02264 7.175 4.825 5.97736 4.825 4.5Z" />
+              </svg>
+            </section>
 
-        {/* Conductor info — Uiverse Styled Profile Card */}
-        <div className="flex items-center px-3 py-1.5 bg-white rounded-2xl shadow-md border border-[#E2E8F0] mr-2">
-          <section className="flex justify-center items-center w-9 h-9 rounded-full shadow-md bg-gradient-to-r from-[#F9C97C] to-[#A2E9C1] hover:from-[#C9A9E9] hover:to-[#7EE7FC] hover:cursor-pointer hover:scale-105 transition-all duration-300 flex-shrink-0">
-            <svg viewBox="0 0 15 15" className="w-4 h-4 fill-gray-700">
-              <path d="M7.5 0.875C5.49797 0.875 3.875 2.49797 3.875 4.5C3.875 6.15288 4.98124 7.54738 6.49373 7.98351C5.2997 8.12901 4.27557 8.55134 3.50407 9.31167C2.52216 10.2794 2.02502 11.72 2.02502 13.5999C2.02502 13.8623 2.23769 14.0749 2.50002 14.0749C2.76236 14.0749 2.97502 13.8623 2.97502 13.5999C2.97502 11.8799 3.42786 10.7206 4.17091 9.9883C4.91536 9.25463 6.02674 8.87499 7.49995 8.87499C8.97317 8.87499 10.0846 9.25463 10.8291 9.98831C11.5721 10.7206 12.025 11.8799 12.025 13.5999C12.025 13.8623 12.2376 14.0749 12.5 14.0749C12.7623 14.075 12.975 13.8623 12.975 13.6C12.975 11.72 12.4778 10.2794 11.4959 9.31166C10.7244 8.55135 9.70025 8.12903 8.50625 7.98352C10.0187 7.5474 11.125 6.15289 11.125 4.5C11.125 2.49797 9.50203 0.875 7.5 0.875ZM4.825 4.5C4.825 3.02264 6.02264 1.825 7.5 1.825C8.97736 1.825 10.175 3.02264 10.175 4.5C10.175 5.97736 8.97736 7.175 7.5 7.175C6.02264 7.175 4.825 5.97736 4.825 4.5Z" />
-            </svg>
-          </section>
+            <section className="block border-l border-gray-300 ml-2.5 pl-2.5">
+              <div>
+                <h3 className="text-gray-800 font-extrabold text-[12px] leading-tight">{user?.name || "Rajan K"}</h3>
+                <h3 className="bg-clip-text text-transparent bg-gradient-to-l from-[#005BC4] to-[#27272A] text-[10px] font-bold mt-0.5 whitespace-nowrap">
+                  TNSTC Conductor · On Duty
+                </h3>
+              </div>
+            </section>
+          </div>
 
-          <section className="block border-l border-gray-300 ml-2.5 pl-2.5">
-            <div>
-              <h3 className="text-gray-800 font-extrabold text-[12px] leading-tight">{user?.name || "Rajan K"}</h3>
-              <h3 className="bg-clip-text text-transparent bg-gradient-to-l from-[#005BC4] to-[#27272A] text-[10px] font-bold mt-0.5 whitespace-nowrap">
-                TNSTC Conductor · On Duty
-              </h3>
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            className="group flex items-center justify-start w-11 h-11 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-28 hover:rounded-lg active:translate-x-1 active:translate-y-1 ml-2 disabled:opacity-80"
+            title="Logout"
+          >
+            <div className="flex items-center justify-center w-full transition-all duration-300 group-hover:justify-start group-hover:px-3">
+              {loggingOut ? (
+                <Spinner size={16} color="white" />
+              ) : (
+                <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 512 512" fill="white">
+                  <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
+                </svg>
+              )}
             </div>
-          </section>
+            <div className="absolute right-3 transform translate-x-full opacity-0 text-white text-xs font-semibold transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 whitespace-nowrap">
+              {loggingOut ? "Exiting..." : "Logout"}
+            </div>
+          </button>
         </div>
-
-        <button
-          onClick={onLogout}
-          className="group flex items-center justify-start w-11 h-11 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-28 hover:rounded-lg active:translate-x-1 active:translate-y-1 ml-2"
-          title="Logout"
-        >
-          <div className="flex items-center justify-center w-full transition-all duration-300 group-hover:justify-start group-hover:px-3">
-            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 512 512" fill="white">
-              <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
-            </svg>
-          </div>
-          <div className="absolute right-3 transform translate-x-full opacity-0 text-white text-xs font-semibold transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 whitespace-nowrap">
-            Logout
-          </div>
-        </button>
       </div>
 
       {/* Main content */}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { ptpApi } from '../../services/api';
 import type { PromiseToPay, PTPStats } from '../../types/transit';
+import Spinner from '../Common/Spinner';
 
 export default function PTPDashboard() {
   const [activePtps, setActivePtps] = useState<PromiseToPay[]>([]);
@@ -75,8 +76,8 @@ export default function PTPDashboard() {
 
   if (loading) {
     return (
-      <div className="py-12 text-center text-[#94A3B8] text-sm flex items-center justify-center gap-2">
-        <div className="w-4 h-4 border-2 border-[#3B82F6] border-t-transparent rounded-full spin" />
+      <div className="py-12 text-center text-[#94A3B8] text-sm flex items-center justify-center gap-3">
+        <Spinner size={22} color="#3B82F6" />
         Loading Promise-to-Pay Tracker...
       </div>
     );
