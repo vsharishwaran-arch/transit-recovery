@@ -178,10 +178,10 @@ function TicketForm({ onGenerate }: { onGenerate: (data: { session: TicketSessio
 
           {/* Generate button */}
           <button onClick={handleCreateTicket} disabled={loading}
-            className="w-full h-[46px] rounded-xl text-white text-[14px] font-bold transition-all hover:opacity-90 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
-            style={{ background: "linear-gradient(135deg, #1A56DB, #1D4ED8)", boxShadow: "0 4px 16px rgba(26,86,219,0.25)" }}>
+            className="w-full max-w-[240px] mx-auto h-[56px] rounded-2xl text-white text-[15px] font-black transition-all hover:opacity-90 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
+            style={{ background: "linear-gradient(135deg, #1A56DB, #1D4ED8)", boxShadow: "0 8px 24px rgba(26,86,219,0.35)" }}>
             {loading ? "Generating..." : "Generate Ticket"}
-            <svg width="15" height="15" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            <svg width="18" height="18" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
 
           <p className="text-[#94A3B8] text-[11px] text-center">
