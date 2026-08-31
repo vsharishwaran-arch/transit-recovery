@@ -11,6 +11,8 @@ import authRoutes from './routes/authRoutes.js';
 import conductorRoutes from './routes/conductorRoutes.js';
 import recoveryRoutes from './routes/recoveryRoutes.js';
 import agentRoutes from './routes/agentRoutes.js';
+import ptpRoutes from './routes/ptpRoutes.js';
+import { startPTPChecker } from './agents/ptpChecker.js';
 import errorHandler from './middlewares/errorHandler.js';
 
 dotenv.config();
@@ -65,12 +67,15 @@ app.use('/api/auth', authRoutes);
 app.use('/api/conductor', conductorRoutes);
 app.use('/api/recovery', recoveryRoutes);
 app.use('/api/agent', agentRoutes);
+app.use('/api/ptp', ptpRoutes);
 
 // Global error handler (must be last)
 app.use(errorHandler);
 
 // Start server
 connectDB().then(() => {
+  startPTPChecker();
+  console.log('⏰ PTP Checker started — checking every 60 seconds');
   app.listen(PORT, () => {
     console.log(`🚀 Transit Recovery Agent running on port ${PORT}`);
   });

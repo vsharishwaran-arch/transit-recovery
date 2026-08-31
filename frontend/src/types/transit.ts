@@ -20,7 +20,7 @@ export type RecoveryStatus =
 export type MessageLanguage = 'english' | 'hinglish' | 'tamil';
 export type NetworkStrength = 'strong' | 'weak' | 'none';
 export type PassengerLoad = 'low' | 'medium' | 'high' | 'overcrowded';
-export type UpiStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'cancelled' | 'payment_success_ticket_failed';
+export type UpiStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'cancelled' | 'payment_success_ticket_failed' | 'ptp_active';
 export type SuggestedAction = 'retry_upi' | 'pay_cash' | 'retry_at_stop' | 'generate_ticket';
 
 export interface VehicleContext {
@@ -140,3 +140,30 @@ export interface PaginatedSessions {
   page: number;
   limit: number;
 }
+
+export interface PromiseToPay {
+  _id: string;
+  sessionId: string;
+  conductorId: User | string;
+  busNumber: string;
+  routeId: Route;
+  amount: number;
+  passengerCount: number;
+  promisedMinutes: number;
+  promisedAt: string;
+  expiresAt: string;
+  status: 'active' | 'paid' | 'expired' | 'escalated';
+  paidAt: string | null;
+  escalatedAt: string | null;
+  notes: string | null;
+  minutesRemaining?: number;
+}
+
+export interface PTPStats {
+  activePTPs: number;
+  amountPending: number;
+  totalResolved: number;
+  totalExpired: number;
+  successRate: number;
+}
+

@@ -11,7 +11,7 @@ const TicketSessionSchema = new mongoose.Schema(
     paymentMethod: { type: String, enum: ['upi', 'cash'], default: 'upi' },
     upiStatus: {
       type: String,
-      enum: ['pending', 'paid', 'failed', 'expired', 'cancelled', 'payment_success_ticket_failed'],
+      enum: ['pending', 'paid', 'failed', 'expired', 'cancelled', 'payment_success_ticket_failed', 'ptp_active'],
       default: 'pending',
     },
     vehicleSpeed: { type: Number, default: 0 },

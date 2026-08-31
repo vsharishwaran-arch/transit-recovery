@@ -11,6 +11,7 @@ import Route from '../src/models/Route.js';
 import User from '../src/models/User.js';
 import TicketSession from '../src/models/TicketSession.js';
 import RecoveryLog from '../src/models/RecoveryLog.js';
+import PromiseToPay from '../src/models/PromiseToPay.js';
 
 const connectForSeed = async () => {
   if (process.env.MONGO_URI) {
@@ -45,6 +46,7 @@ const seed = async () => {
     User.deleteMany({}),
     TicketSession.deleteMany({}),
     RecoveryLog.deleteMany({}),
+    PromiseToPay.deleteMany({}),
   ]);
 
   // ===== 1. ROUTES =====
@@ -298,6 +300,130 @@ const seed = async () => {
 
   await RecoveryLog.insertMany(recoveryLogs);
   console.log('✅ Created 5 RecoveryLogs for demo history');
+
+  // ===== 5. PROMISE-TO-PAY (PTP) SEED DATA =====
+  const now = new Date();
+  const conductorObj = conductors[0] || adminUser;
+  const routeObj = routes[0];
+
+  const ptpSeedData = [
+    // 3 × active (expires in 10, 15, 20 mins)
+    {
+      sessionId: createdSessions[0]?.sessionId || 'ptp_active_1',
+      conductorId: conductorObj._id,
+      busNumber: 'TN01-AB-1234',
+      routeId: routeObj._id,
+      amount: 35,
+      passengerCount: 1,
+      promisedMinutes: 10,
+      promisedAt: now,
+      expiresAt: new Date(now.getTime() + 10 * 60000),
+      status: 'active',
+      notes: 'Passenger said will pay at Koyambedu bus stand',
+    },
+    {
+      sessionId: createdSessions[1]?.sessionId || 'ptp_active_2',
+      conductorId: conductorObj._id,
+      busNumber: 'TN01-AB-1234',
+      routeId: routeObj._id,
+      amount: 70,
+      passengerCount: 2,
+      promisedMinutes: 15,
+      promisedAt: now,
+      expiresAt: new Date(now.getTime() + 15 * 60000),
+      status: 'active',
+      notes: 'Passenger phone battery dead — charging via USB',
+    },
+    {
+      sessionId: createdSessions[2]?.sessionId || 'ptp_active_3',
+      conductorId: conductorObj._id,
+      busNumber: 'TN22-IJ-7890',
+      routeId: routes[1]?._id || routeObj._id,
+      amount: 110,
+      passengerCount: 2,
+      promisedMinutes: 20,
+      promisedAt: now,
+      expiresAt: new Date(now.getTime() + 20 * 60000),
+      status: 'active',
+      notes: 'Promised to pay after getting off at Guindy',
+    },
+    // 2 × paid
+    {
+      sessionId: createdSessions[3]?.sessionId || 'ptp_paid_1',
+      conductorId: conductorObj._id,
+      busNumber: 'TN01-AB-1234',
+      routeId: routeObj._id,
+      amount: 45,
+      passengerCount: 1,
+      promisedMinutes: 10,
+      promisedAt: new Date(now.getTime() - 30 * 60000),
+      expiresAt: new Date(now.getTime() - 20 * 60000),
+      status: 'paid',
+      paidAt: new Date(now.getTime() - 25 * 60000),
+      notes: 'Paid via GPay at next signal stop',
+    },
+    {
+      sessionId: createdSessions[4]?.sessionId || 'ptp_paid_2',
+      conductorId: conductorObj._id,
+      busNumber: 'TN07-CD-5678',
+      routeId: routeObj._id,
+      amount: 90,
+      passengerCount: 2,
+      promisedMinutes: 15,
+      promisedAt: new Date(now.getTime() - 45 * 60000),
+      expiresAt: new Date(now.getTime() - 30 * 60000),
+      status: 'paid',
+      paidAt: new Date(now.getTime() - 35 * 60000),
+      notes: 'Paid cash after ATM stop',
+    },
+    // 2 × expired
+    {
+      sessionId: 'ptp_exp_1',
+      conductorId: conductorObj._id,
+      busNumber: 'TN01-AB-1234',
+      routeId: routeObj._id,
+      amount: 35,
+      passengerCount: 1,
+      promisedMinutes: 5,
+      promisedAt: new Date(now.getTime() - 40 * 60000),
+      expiresAt: new Date(now.getTime() - 35 * 60000),
+      status: 'expired',
+      escalatedAt: new Date(now.getTime() - 35 * 60000),
+      notes: 'Passenger got off without paying',
+    },
+    {
+      sessionId: 'ptp_exp_2',
+      conductorId: conductorObj._id,
+      busNumber: 'TN22-IJ-7890',
+      routeId: routeObj._id,
+      amount: 70,
+      passengerCount: 2,
+      promisedMinutes: 10,
+      promisedAt: new Date(now.getTime() - 50 * 60000),
+      expiresAt: new Date(now.getTime() - 40 * 60000),
+      status: 'expired',
+      escalatedAt: new Date(now.getTime() - 40 * 60000),
+      notes: 'Network failure during retry',
+    },
+    // 1 × escalated
+    {
+      sessionId: 'ptp_esc_1',
+      conductorId: conductorObj._id,
+      busNumber: 'TN01-AB-1234',
+      routeId: routeObj._id,
+      amount: 140,
+      passengerCount: 4,
+      promisedMinutes: 15,
+      promisedAt: new Date(now.getTime() - 60 * 60000),
+      expiresAt: new Date(now.getTime() - 45 * 60000),
+      status: 'escalated',
+      escalatedAt: new Date(now.getTime() - 45 * 60000),
+      notes: 'Moved to escalated queue for admin review',
+    },
+  ];
+
+  await PromiseToPay.insertMany(ptpSeedData);
+  console.log('✅ Created 8 PromiseToPay documents (3 active, 2 paid, 2 expired, 1 escalated)');
   console.log('🚀 Seed complete — run the recovery agent!');
   console.log('\nDemo credentials:');
   console.log('  Admin:     TNSTC-ADMIN  / admin123');

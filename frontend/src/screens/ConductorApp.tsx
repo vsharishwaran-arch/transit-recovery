@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { conductorApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import type { TicketSession } from "../types/transit";
+import PTPModal from "../components/Conductor/PTPModal";
 
 type ConductorView = "ticket" | "qr" | "failed";
 
@@ -327,12 +328,20 @@ function FailedPanel({ ticketData, onRetry, onCash }: {
   ticketData: { session: TicketSession } | null;
   onRetry: () => void; onCash: () => void;
 }) {
-  const session = ticketData?.session;
+  const [showPTPModal, setShowPTPModal] = useState(false);
+  const session = ticketData?.session || null;
   const amount = session?.amount || 70;
   const busNumber = session?.busNumber || "TN01-AB-1234";
 
   return (
     <div className="h-full flex items-center justify-center bg-[#F0F4F8] px-8 py-8">
+      {showPTPModal && (
+        <PTPModal
+          session={session}
+          onClose={() => setShowPTPModal(false)}
+          onSuccess={() => onRetry()}
+        />
+      )}
       <div className="flex gap-8 w-full max-w-[900px]">
         {/* Main failure card */}
         <div className="flex-1 bg-white rounded-3xl p-8" style={{ boxShadow: "0 2px 16px rgba(0,0,0,0.08)" }}>
@@ -362,7 +371,7 @@ function FailedPanel({ ticketData, onRetry, onCash }: {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 mb-3">
             <button onClick={onRetry} className="btn-retry-upi">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <path d="M23 4v6h-6M1 20v-6h6"/>
@@ -374,6 +383,13 @@ function FailedPanel({ ticketData, onRetry, onCash }: {
               Accept Cash Instead
             </button>
           </div>
+
+          <button
+            onClick={() => setShowPTPModal(true)}
+            className="w-full h-12 rounded-2xl text-[#D97706] bg-[#FEF3C7] border-2 border-[#FCD34D] text-[14px] font-bold hover:bg-[#FDE68A] transition-all flex items-center justify-center gap-2 shadow-sm"
+          >
+            🤝 Passenger Promised to Pay
+          </button>
         </div>
 
         {/* Right sidebar */}

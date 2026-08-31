@@ -51,6 +51,7 @@ export const login = async (req, res, next) => {
     setAuthCookie(res, token);
     res.json({
       success: true,
+      token,
       user: {
         _id: user._id,
         name: user.name,

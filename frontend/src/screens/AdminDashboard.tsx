@@ -3,9 +3,10 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
 } from "recharts";
-import { recoveryApi, agentApi } from "../services/api";
+import { recoveryApi, agentApi, ptpApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import type { RecoveryStats, TicketSession, RecoveryLog, BatchRun } from "../types/transit";
+import PTPDashboard from "../components/Recovery/PTPDashboard";
 
 const FAILURE_COLORS: Record<string, string> = {
   network_handoff: "#3B82F6",
@@ -586,7 +587,7 @@ function BatchHistoryTab({ batches }: { batches: BatchRun[] }) {
 // ── Root Admin Dashboard ──────────────────────────────────────
 export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const { user } = useAuth();
-  const [activeNav, setActiveNav] = useState<"dashboard" | "failed" | "agent" | "escalated" | "history">("dashboard");
+  const [activeNav, setActiveNav] = useState<"dashboard" | "failed" | "agent" | "escalated" | "ptp" | "history">("dashboard");
   const [showConfig, setShowConfig] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [running, setRunning] = useState(false);
@@ -595,21 +596,24 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const [sessions, setSessions] = useState<TicketSession[]>([]);
   const [escalated, setEscalated] = useState<RecoveryLog[]>([]);
   const [batches, setBatches] = useState<BatchRun[]>([]);
+  const [ptpActiveCount, setPtpActiveCount] = useState<number>(0);
   const [batchData, setBatchData] = useState<{ batch: BatchRun; logs: RecoveryLog[] } | null>(null);
 
   const loadAllData = useCallback(async () => {
     try {
-      const [statsRes, sessRes, escRes, batchRes] = await Promise.all([
+      const [statsRes, sessRes, escRes, batchRes, ptpStatsRes] = await Promise.all([
         recoveryApi.getStats(),
         recoveryApi.getFailedSessions({ page: 1, limit: 50 }),
         recoveryApi.getEscalated(),
         recoveryApi.getBatchHistory(),
+        ptpApi.getStats(),
       ]);
 
       setStats(statsRes.data.stats);
       setSessions(sessRes.data.sessions || []);
       setEscalated(escRes.data.escalated || []);
       setBatches(batchRes.data.batches || []);
+      setPtpActiveCount(ptpStatsRes.data.stats?.activePTPs || 0);
     } catch {}
   }, []);
 
@@ -645,6 +649,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
     { id: "dashboard" as const, icon: <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>, label: "Dashboard" },
     { id: "failed" as const, icon: <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>, label: "Failed Sessions" },
     { id: "escalated" as const, icon: <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>, label: "Escalated Queue", badge: escalated.length || undefined },
+    { id: "ptp" as const, icon: <span className="text-sm">🤝</span>, label: "PTP Tracker", badge: ptpActiveCount || undefined },
     { id: "history" as const, icon: <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, label: "Batch History" },
   ];
 
@@ -822,6 +827,7 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
 
           {activeNav === "failed" && <FailedSessionsTab sessions={sessions} />}
           {activeNav === "escalated" && <EscalatedTab escalated={escalated} onRefresh={loadAllData} />}
+          {activeNav === "ptp" && <PTPDashboard />}
           {activeNav === "history" && <BatchHistoryTab batches={batches} />}
         </div>
       </div>

@@ -7,6 +7,8 @@ import type {
   BatchRun,
   BatchDetail,
   PaginatedSessions,
+  PromiseToPay,
+  PTPStats,
 } from '../types/transit';
 
 const api = axios.create({
@@ -82,6 +84,31 @@ export const agentApi = {
       language,
       routeFilter,
     }),
+};
+
+// ─── PTP API ──────────────────────────────────────────────────────────────────
+export const ptpApi = {
+  create: (data: {
+    sessionId: string;
+    busNumber: string;
+    routeId: string;
+    amount: number;
+    passengerCount: number;
+    promisedMinutes: number;
+    notes?: string;
+  }) => api.post<{ success: boolean; ptp: PromiseToPay; message: string }>('/ptp/create', data),
+
+  markPaid: (ptpId: string) =>
+    api.patch<{ success: boolean; ptp: PromiseToPay }>('/ptp/mark-paid', { ptpId }),
+
+  getActive: () =>
+    api.get<{ success: boolean; ptps: PromiseToPay[]; total: number }>('/ptp/active'),
+
+  getHistory: () =>
+    api.get<{ success: boolean; ptps: PromiseToPay[]; total: number; stats: Record<string, number> }>('/ptp/history'),
+
+  getStats: () =>
+    api.get<{ success: boolean; stats: PTPStats }>('/ptp/stats'),
 };
 
 export default api;
