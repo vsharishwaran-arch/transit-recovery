@@ -708,13 +708,22 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
           </div>
         </nav>
 
-        {/* Last batch card */}
+        {/* Last batch card — Uiverse Expanding Circle Card */}
         {batches.length > 0 && (
-          <div className="mx-3 mb-4 rounded-2xl overflow-hidden" style={{ background: "linear-gradient(135deg, #1E293B, #0F172A)" }}>
-            <div className="px-4 py-4">
-              <p className="text-[#64748B] text-[10px] font-semibold uppercase tracking-widest mb-2">Last Batch Run</p>
-              <p className="font-bold text-[#34D399]" style={{ fontSize: 20, fontFamily: "JetBrains Mono, monospace" }}>₹{batches[0].amountRecovered || 0}</p>
-              <p className="text-[#64748B] text-[10px] mt-0.5">recovered from {batches[0].sessionsRecovered || 0} sessions</p>
+          <div className="mx-3 mb-4">
+            <div className="batch-notice-card">
+              <div className="batch-number">
+                <span className="badge-text">✓ AI</span>
+              </div>
+              <p className="batch-heading">Last Batch Run</p>
+              <div className="batch-content">
+                <p className="font-bold text-[#34D399] transition-colors duration-500 batch-content-amount" style={{ fontSize: 22, fontFamily: "JetBrains Mono, monospace" }}>
+                  ₹{batches[0].amountRecovered || 0}
+                </p>
+                <p className="text-[#94A3B8] text-[10px] mt-0.5 transition-colors duration-500 batch-content-sub">
+                  recovered from {batches[0].sessionsRecovered || 0} sessions
+                </p>
+              </div>
             </div>
           </div>
         )}
