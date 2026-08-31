@@ -230,10 +230,11 @@ export default function LoginPage({ onLogin }: Props) {
             )}
 
             {/* Submit */}
-            <button type="submit" disabled={loading}
-              className="w-full h-[54px] rounded-2xl text-white text-[15px] font-bold tracking-wide transition-all shadow-lg hover:shadow-xl active:scale-[0.98] disabled:opacity-60"
-              style={{ background: `linear-gradient(135deg, ${violet}, #4F46E5)`, boxShadow: "0 8px 24px rgba(108,92,231,0.35)" }}>
-              {loading ? "Signing in..." : "SIGN IN"}
+            <button type="submit" disabled={loading} className="btn-signin">
+              <span>{loading ? "SIGNING IN..." : "SIGN IN"}</span>
+              <div className="arrow-wrapper">
+                <div className="arrow"></div>
+              </div>
             </button>
           </form>
 
