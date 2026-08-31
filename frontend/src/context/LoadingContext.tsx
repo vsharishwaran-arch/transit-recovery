@@ -72,19 +72,10 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
 
-      {/* Global Center Page Loader Overlay when System / Network Delay Occurs */}
+      {/* Centered 12 Blade Spinner Alone */}
       {isLoading && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center pointer-events-none transition-all duration-300"
-          style={{ background: 'rgba(15, 23, 42, 0.45)', backdropFilter: 'blur(3px)' }}
-        >
-          {/* Centered Glass Card with 12 Blade Spinner */}
-          <div className="bg-[#0F172A]/90 border border-[#334155] px-8 py-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4 text-white animate-fade-in">
-            <Spinner size={36} color="#3B82F6" />
-            <p className="text-xs font-semibold text-[#94A3B8] tracking-wide">
-              {loadingText || 'Processing network request...'}
-            </p>
-          </div>
+        <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+          <Spinner size={36} color="#3B82F6" />
         </div>
       )}
     </LoadingContext.Provider>
