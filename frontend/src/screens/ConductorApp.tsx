@@ -422,15 +422,18 @@ export default function ConductorApp({ onLogout }: { onLogout: () => void }) {
           <span className="text-[#64748B] text-[12px]">47C · Koyambedu → Tambaram</span>
         </div>
 
-        {/* View tabs */}
-        <div className="flex items-center gap-1 ml-8 bg-[#F8FAFC] rounded-xl p-1">
+        {/* View tabs — 3D Glossy Animated Buttons */}
+        <div className="flex items-center gap-3 ml-6">
           {([
             { id: "ticket" as ConductorView, label: "Issue Ticket" },
             { id: "qr"     as ConductorView, label: "QR Payment" },
             { id: "failed" as ConductorView, label: "Failed Card" },
           ]).map(t => (
-            <button key={t.id} onClick={() => setView(t.id)}
-              className={`px-4 py-1.5 rounded-lg text-[12px] font-bold transition-all ${view===t.id ? "bg-white text-[#0F172A] shadow-sm" : "text-[#94A3B8] hover:text-[#64748B]"}`}>
+            <button
+              key={t.id}
+              onClick={() => setView(t.id)}
+              className={`Btn ${view === t.id ? "" : "Btn-inactive"}`}
+            >
               {t.label}
             </button>
           ))}
