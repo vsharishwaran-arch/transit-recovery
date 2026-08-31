@@ -375,5 +375,77 @@ body {
   }
 }
 
+/* From Uiverse.io — Cancel & Go Back Button */
+.btn-cancel-go {
+  width: 150px;
+  height: 44px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(230, 34, 34, 0.25);
+  background: #e62222;
+  position: relative;
+  overflow: hidden;
+  transition: all 200ms ease;
+  margin: 1.5rem auto 0;
+}
+
+.btn-cancel-go, .btn-cancel-go span {
+  transition: 200ms;
+}
+
+.btn-cancel-go .btn-text {
+  transform: translateX(18px);
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.btn-cancel-go .btn-icon {
+  position: absolute;
+  border-left: 1px solid #c41b1b;
+  transform: translateX(106px);
+  height: 44px;
+  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+}
+
+.btn-cancel-go svg {
+  width: 15px;
+  height: 15px;
+  fill: #eee;
+  transition: transform 200ms ease;
+}
+
+.btn-cancel-go:hover {
+  background: #ff3636;
+  box-shadow: 0 6px 16px rgba(255, 54, 54, 0.35);
+}
+
+.btn-cancel-go:hover .btn-text {
+  color: transparent;
+}
+
+.btn-cancel-go:hover .btn-icon {
+  width: 150px;
+  border-left: none;
+  transform: translateX(0);
+}
+
+.btn-cancel-go:focus {
+  outline: none;
+}
+
+.btn-cancel-go:active .btn-icon svg {
+  transform: scale(0.8);
+}
+
+
 
 
