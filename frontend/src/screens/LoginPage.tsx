@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import Spinner from "../components/Common/Spinner";
 
 type Role = "admin" | "conductor" | null;
 
@@ -232,19 +231,10 @@ export default function LoginPage({ onLogin }: Props) {
 
             {/* Submit */}
             <button type="submit" disabled={loading} className="btn-signin">
-              {loading ? (
-                <span className="flex items-center gap-2">
-                  <Spinner size={18} color="white" />
-                  SIGNING IN...
-                </span>
-              ) : (
-                <>
-                  <span>SIGN IN</span>
-                  <div className="arrow-wrapper">
-                    <div className="arrow"></div>
-                  </div>
-                </>
-              )}
+              <span>SIGN IN</span>
+              <div className="arrow-wrapper">
+                <div className="arrow"></div>
+              </div>
             </button>
           </form>
 

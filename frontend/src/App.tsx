@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AuthProvider } from "./context/AuthContext";
+import { LoadingProvider } from "./context/LoadingContext";
 import LoginPage from "./screens/LoginPage";
 import ConductorApp from "./screens/ConductorApp";
 import AdminDashboard from "./screens/AdminDashboard";
@@ -55,7 +56,9 @@ function MainContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <MainContent />
+      <LoadingProvider>
+        <MainContent />
+      </LoadingProvider>
     </AuthProvider>
   );
 }

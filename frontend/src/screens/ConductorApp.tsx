@@ -3,7 +3,6 @@ import { conductorApi } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import type { TicketSession } from "../types/transit";
 import PTPModal from "../components/Conductor/PTPModal";
-import Spinner from "../components/Common/Spinner";
 
 type ConductorView = "ticket" | "qr" | "failed";
 
@@ -182,17 +181,8 @@ function TicketForm({ onGenerate }: { onGenerate: (data: { session: TicketSessio
           <button onClick={handleCreateTicket} disabled={loading}
             className="w-full max-w-[240px] mx-auto h-[56px] rounded-2xl text-white text-[15px] font-black transition-all hover:opacity-90 active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
             style={{ background: "linear-gradient(135deg, #1A56DB, #1D4ED8)", boxShadow: "0 8px 24px rgba(26,86,219,0.35)" }}>
-            {loading ? (
-              <>
-                <Spinner size={18} color="white" />
-                Generating...
-              </>
-            ) : (
-              <>
-                Generate Ticket
-                <svg width="18" height="18" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </>
-            )}
+            {loading ? "Generating..." : "Generate Ticket"}
+            <svg width="18" height="18" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
           </button>
 
           <p className="text-[#94A3B8] text-[11px] text-center">
@@ -430,14 +420,6 @@ export default function ConductorApp({ onLogout }: { onLogout: () => void }) {
   const { user } = useAuth();
   const [view, setView] = useState<ConductorView>("ticket");
   const [ticketData, setTicketData] = useState<{ session: TicketSession; paymentLink: string; qrCode: string } | null>(null);
-  const [loggingOut, setLoggingOut] = useState(false);
-
-  function handleLogout() {
-    setLoggingOut(true);
-    setTimeout(() => {
-      onLogout();
-    }, 350);
-  }
 
   return (
     <div className="h-full flex flex-col bg-[#F0F4F8]">
@@ -489,22 +471,17 @@ export default function ConductorApp({ onLogout }: { onLogout: () => void }) {
           </div>
 
           <button
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="group flex items-center justify-start w-11 h-11 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-28 hover:rounded-lg active:translate-x-1 active:translate-y-1 ml-2 disabled:opacity-80"
+            onClick={onLogout}
+            className="group flex items-center justify-start w-11 h-11 bg-red-600 rounded-full cursor-pointer relative overflow-hidden transition-all duration-200 shadow-lg hover:w-28 hover:rounded-lg active:translate-x-1 active:translate-y-1 ml-2"
             title="Logout"
           >
             <div className="flex items-center justify-center w-full transition-all duration-300 group-hover:justify-start group-hover:px-3">
-              {loggingOut ? (
-                <Spinner size={16} color="white" />
-              ) : (
-                <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 512 512" fill="white">
-                  <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
-                </svg>
-              )}
+              <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 512 512" fill="white">
+                <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
+              </svg>
             </div>
             <div className="absolute right-3 transform translate-x-full opacity-0 text-white text-xs font-semibold transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 whitespace-nowrap">
-              {loggingOut ? "Exiting..." : "Logout"}
+              Logout
             </div>
           </button>
         </div>
