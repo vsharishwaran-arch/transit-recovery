@@ -238,8 +238,11 @@ function AgentConfigModal({ onClose, onRun }: { onClose: () => void; onRun: (con
         {/* Sticky Footer */}
         <div className="px-7 py-4 border-t border-[#F1F5F9] flex gap-3 flex-shrink-0 bg-white">
           <button onClick={onClose} className="h-11 px-5 rounded-xl text-[#64748B] text-[13px] font-semibold bg-[#F8FAFC] hover:bg-[#F1F5F9] transition-colors">Cancel</button>
-          <button onClick={() => onRun({ batchSize, language: lang, routeFilter: route })} className="flex-1 h-11 rounded-xl text-white text-[13px] font-bold transition-all hover:opacity-90 flex items-center justify-center gap-2" style={{ background: "linear-gradient(135deg, #3B82F6, #1D4ED8)" }}>
-            ▶ Run Recovery Agent
+          <button onClick={() => onRun({ batchSize, language: lang, routeFilter: route })} className="btn-run-agent flex-1 h-11">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Run Recovery Agent
           </button>
         </div>
       </div>
@@ -738,10 +741,15 @@ export default function AdminDashboard({ onLogout }: { onLogout: () => void }) {
               <h1 className="text-[#0F172A] text-[22px] font-black mb-0.5">Revenue Recovery Dashboard</h1>
               <p className="text-[#94A3B8] text-[13px]">AI-powered UPI failure recovery · TNSTC Tamil Nadu</p>
             </div>
-            <button onClick={() => setShowConfig(true)} disabled={running}
-              className="flex items-center gap-2 h-10 px-5 rounded-xl text-white text-[13px] font-bold transition-all hover:opacity-90 disabled:opacity-60"
-              style={{ background: "linear-gradient(135deg, #3B82F6, #1D4ED8)", boxShadow: "0 4px 14px rgba(59,130,246,0.35)" }}>
-              {running ? "Running Agent..." : "▶ Run Recovery Agent"}
+            <button onClick={() => setShowConfig(true)} disabled={running} className={`btn-run-agent ${running ? "is-loading opacity-85" : ""}`}>
+              <svg viewBox="0 0 24 24" fill={running ? "none" : "currentColor"} stroke={running ? "currentColor" : "none"} strokeWidth={running ? "2.5" : "0"}>
+                {running ? (
+                  <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                ) : (
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                )}
+              </svg>
+              {running ? "Running Agent..." : "Run Recovery Agent"}
             </button>
           </div>
 

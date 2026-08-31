@@ -322,4 +322,58 @@ body {
   color: #DBEAFE !important;
 }
 
+/* From Uiverse.io by mobinkakei — Run Recovery Agent Button */
+.btn-run-agent {
+  color: white;
+  background-color: #1D4ED8;
+  --ring-color: #93C5FD;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(29, 78, 216, 0.35);
+}
+
+.btn-run-agent:hover {
+  background-color: #1E40AF;
+  box-shadow: 0 6px 20px rgba(30, 64, 175, 0.45);
+}
+
+.btn-run-agent:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px #93C5FD;
+}
+
+.btn-run-agent svg {
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.5rem;
+  color: white;
+}
+
+.btn-run-agent.is-loading svg {
+  animation: spin_357 1s linear infinite;
+}
+
+@keyframes spin_357 {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
 
