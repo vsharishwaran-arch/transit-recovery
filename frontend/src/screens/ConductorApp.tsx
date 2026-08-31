@@ -363,8 +363,11 @@ function FailedPanel({ ticketData, onRetry, onCash }: {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <button onClick={onRetry} className="h-12 rounded-2xl text-white text-[14px] font-black transition-all hover:opacity-90"
-              style={{ background: "linear-gradient(135deg, #1A56DB, #1D4ED8)" }}>
+            <button onClick={onRetry} className="btn-retry-upi">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M23 4v6h-6M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+              </svg>
               Retry UPI Payment
             </button>
             <button onClick={onCash} className="h-12 rounded-2xl text-[#1E293B] text-[14px] font-semibold border-2 border-[#E2E8F0] hover:bg-[#F8FAFC] transition-colors">

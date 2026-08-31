@@ -446,6 +446,49 @@ body {
   transform: scale(0.8);
 }
 
+/* From Uiverse.io — Retry UPI Payment Button */
+.btn-retry-upi {
+  color: white;
+  background-color: #222;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+  height: 48px;
+  cursor: pointer;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+
+.btn-retry-upi:hover {
+  background-color: #333;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.btn-retry-upi svg {
+  display: inline-block;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-right: 0.6rem;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.btn-retry-upi:focus svg,
+.btn-retry-upi:active svg {
+  animation: spin_357 0.5s linear;
+}
+
+
 
 
 
