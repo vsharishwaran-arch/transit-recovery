@@ -215,7 +215,7 @@ body {
   border-radius: 50%;
 }
 
-.Btn:hover {
+.Btn:active {
   animation: jello-horizontal 0.9s both;
 }
 
