@@ -1,12 +1,58 @@
-# Transit Recovery Agent
+```markdown
+ 🚍 Transit Recovery Agent
+> AI-powered autonomous UPI payment recovery for Tamil Nadu 
+> government bus ticketing
 
-**AI-powered autonomous UPI payment recovery for Tamil Nadu government bus ticketing**
+Built for Razorpay AI Buildathon 2026 — Track 03: AI Revenue Recovery
 
-Built for **Razorpay AI Buildathon 2026 — Track 03: AI Revenue Recovery**
+[![CI](https://github.com/vsharishwaran-arch/transit-recovery/actions/workflows/transit-recovery-check.yml/badge.svg)](https://github.com/vsharishwaran-arch/transit-recovery/actions)
 
 ---
 
-## Architecture
+ 🎬 Demo Video
+[▶ Watch 5-minute Demo](https://drive.google.com/file/d/1z2KDKws_JU8qv0XNEW_TrSmhUvV46r0H/view?usp=sharing)
+
+---
+
+💡 The Problem — A Personal Experience
+
+On August 28, 2026, I paid ₹35 via UPI on a TNSTC bus from 
+college. My phone showed **payment successful**. The conductor's 
+machine was still loading. He restarted it. My ticket never 
+came. I didn't know if I'd been charged.
+
+This happens thousands of times daily across Tamil Nadu's 
+21,000 buses:
+
+- 🚌 Moving vehicles cause **network handoffs** between towers
+- 👥 Overcrowded buses create **peak-load timeouts** on UPI servers  
+- 🔄 Conductor terminal restarts cause **webhook dropouts** — 
+  passenger charged, ticket never printed
+- ❌ Passengers give up mid-payment — **checkout abandonment**
+
+Every failed ticket is lost government revenue. 
+There is no automated recovery system. **Until now.**
+
+---
+
+✅ The Solution
+
+An autonomous AI recovery agent that:
+
+1. **Detects** failed, expired, and cancelled UPI ticket sessions
+2. **Captures** vehicle telemetry at moment of failure 
+   (speed, network strength, passenger load)
+3. **Classifies** exact root cause using bus-specific logic
+4. **Generates** personalized recovery messages via Gemini 1.5 Flash
+   in **Hinglish, Tamil, or English**
+5. **Enforces** 5 compliance stopping rules — no harassment
+6. **Tracks** verbal payment promises with live countdown timers
+7. **Escalates** persistent failures to human review
+8. **Reports** exact rupees recovered per batch run
+
+---
+
+🏗️ Architecture
 
 ```
 Failed UPI Payment (Bus Network)
@@ -15,10 +61,16 @@ Vehicle Context Capture
 (speed, network strength, passenger load)
          ↓
 Bus-Specific Failure Classification
-(network handoff / peak load / low balance)
+┌─────────────────────────────────────┐
+│ network_handoff  → speed >40 + timeout  │
+│ peak_load        → overcrowded + timeout│
+│ insufficient_funds → funds error        │
+│ webhook_dropout  → paid but no ticket   │
+│ user_cancelled   → abandoned payment    │
+└─────────────────────────────────────┘
          ↓
-Compliance Stopping Rules
-(max attempts / stale / below threshold / escalated)
+5 Compliance Stopping Rules
+(max attempts / stale / below ₹50 / escalated)
          ↓
 Gemini 1.5 Flash
 (Hinglish / Tamil / English recovery message)
@@ -28,70 +80,144 @@ RecoveryLog (MongoDB audit trail)
 BatchRun Report
 (₹ recovered / sessions / compliance breakdown)
          ↓
-Admin Dashboard + Escalation Queue
+Admin Dashboard + PTP Tracker + Escalation Queue
 ```
 
 ---
 
-## The Problem
+⭐ Key Features
 
-Tamil Nadu buses run on a government-mandated digital ticketing system. But UPI payments fail constantly:
-- **Moving vehicles** cause network handoffs between towers
-- **Overcrowded buses** create peak-load timeouts on UPI servers
-- **Passengers** give up mid-payment or have insufficient funds
+ 🤖 Autonomous Recovery Agent
+- Sequential batch processing (5–50 sessions per run)
+- Bus-specific telemetry classifier — 6 failure root causes
+- Gemini 1.5 Flash multilingual message generation
+- Graceful fallback to templates if LLM unavailable
 
-Every failed ticket is **lost revenue** for the government. There is no automated recovery system.
+🛡️ 5 Compliance Safeguards
+| Rule | Condition | Action |
+|---|---|---|
+| Already Recovered | Session has recovered log | Skip |
+| Max Attempts | 3+ non-skipped logs | Skip |
+| Below Threshold | Amount < ₹50 | Skip |
+| Too Old | Created > 30 days ago | Skip |
+| Already Escalated | Has escalated log | Skip |
+
+ 🤝 Promise-to-Pay (PTP) Tracker
+- Conductor marks verbal payment commitments on-device
+- Custom timer: 5 to 60 minutes (conductor sets)
+- **Live countdown timers** in admin dashboard
+  - 🟢 Green: >5 min | 🟡 Amber: 2–5 min | 🔴 Red: <2 min
+- Background agent auto-escalates expired promises every 60 seconds
+- Directly matches Razorpay's Track 03 example: *"Promise-to-pay tracker"*
+
+📱 Conductor Mobile PWA
+- Dark theme — readable in direct sunlight
+- One-handed operation — 48px+ touch targets
+- Dynamic QR code — 3-second live payment polling
+- Animated status ring: Blue (waiting) → Green (paid) → Red (failed)
+- PTP modal — record promise without leaving the screen
+
+ 📊 Admin Recovery Dashboard
+- Real-time KPI cards (₹ at risk, recovered, rate, escalated)
+- Recharts failure breakdown by root cause
+- Expandable AI message inspector per session
+- Batch history — last 10 agent runs
+- Escalated queue — human review workflow
+
+🌐 Passenger Retry Portal
+- Public URL — no login required
+- Shows journey details + fare
+- One-tap Razorpay checkout
+- Auto-updates RecoveryLog on payment
 
 ---
 
-## The Solution
+🎬 Demo Walkthrough
 
-An autonomous AI recovery agent that:
-1. **Captures vehicle context** at the moment of failure (speed, network strength, passenger load)
-2. **Classifies the exact root cause** — network handoff, peak load, or low balance
-3. **Generates a personalized recovery message** in Hinglish or Tamil via Gemini 1.5 Flash
-4. **Enforces compliance stopping rules** — no harassment, max 3 attempts
-5. **Escalates persistent failures** to human review
-6. **Reports exactly how much revenue was recovered**
+> Full video: [▶ Watch Demo](YOUR_VIDEO_LINK_HERE)
+
+| Step | What to see | URL |
+|---|---|---|
+| 1 | Health check | `localhost:5000/api/health` |
+| 2 | Admin login | `localhost:5173` → TNSTC-ADMIN |
+| 3 | Stats — ₹ at risk | Dashboard cards |
+| 4 | Run agent — Hinglish | "Run Recovery Agent" button |
+| 5 | Batch results — ₹ recovered | BatchResultsPanel |
+| 6 | AI message — Hinglish | "AI Msg ▾" expand |
+| 7 | PTP tracker — live countdown | PTP Tracker tab |
+| 8 | Escalated queue | Escalated tab |
+| 9 | Conductor QR | Login: TNSTC-2891 |
+| 10 | Passenger retry | `localhost:5173/retry` |
 
 ---
 
-## API Endpoints
+🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS, Recharts |
+| Backend | Node.js, Express 4, Mongoose 8, ES Modules |
+| Database | MongoDB Atlas (3-tier fallback) |
+| AI Engine | Gemini 1.5 Flash (@google/genai) |
+| Payments | Razorpay SDK (payment links, QR, webhooks) |
+| Auth | HTTP-only cookie JWT, RBAC |
+| CI | GitHub Actions |
+
+---
+
+🗄️ Database Models (6 Models)
+
+```
+Route          — bus routes, fares, depot info
+User           — conductors + admins (RBAC)
+TicketSession  — payment transactions + vehicle telemetry
+RecoveryLog    — audit trail of every AI recovery attempt
+BatchRun       — batch execution metrics + ₹ recovered
+PromiseToPay   — verbal commitment tracker + expiry
+```
+
+---
+
+🔌 API Endpoints
 
 | Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/auth/login` | Public | Login with employeeId + password |
-| POST | `/api/auth/logout` | Cookie | Clear auth cookie |
-| GET | `/api/auth/me` | Cookie | Get current user |
-| POST | `/api/conductor/ticket` | Conductor | Create ticket + Razorpay payment link |
-| GET | `/api/conductor/ticket/:id/status` | Conductor | Poll payment status |
-| GET | `/api/conductor/tickets` | Conductor | My last 50 tickets |
-| GET | `/api/recovery/sessions` | Admin | Failed sessions with recovery logs |
-| GET | `/api/recovery/stats` | Admin | Aggregated recovery metrics |
-| GET | `/api/recovery/escalated` | Admin | Escalated sessions |
-| GET | `/api/recovery/batches` | Admin | Last 10 batch runs |
-| GET | `/api/recovery/batches/:id` | Admin | Batch detail + all logs |
-| PATCH | `/api/recovery/mark-recovered` | Admin | Manual recovery mark |
-| POST | `/api/agent/run` | Admin | Run autonomous recovery agent |
+|---|---|---|---|
 | GET | `/api/health` | Public | Health check + DB status |
+| POST | `/api/auth/login` | Public | Login → HTTP-only JWT cookie |
+| POST | `/api/auth/logout` | Cookie | Clear auth cookie |
+| GET | `/api/auth/me` | Cookie | Current user |
+| POST | `/api/conductor/ticket` | Conductor | Create ticket + Razorpay QR |
+| GET | `/api/conductor/ticket/:id/status` | Conductor | Poll payment status |
+| GET | `/api/conductor/tickets` | Conductor | Last 50 tickets |
+| GET | `/api/recovery/sessions` | Admin | Failed sessions + AI logs |
+| GET | `/api/recovery/stats` | Admin | Recovery metrics |
+| GET | `/api/recovery/escalated` | Admin | Escalated queue |
+| GET | `/api/recovery/batches` | Admin | Last 10 batch runs |
+| GET | `/api/recovery/batches/:id` | Admin | Batch detail + audit log |
+| PATCH | `/api/recovery/mark-recovered` | Admin | Manual recovery |
+| POST | `/api/agent/run` | Admin | Run recovery agent |
+| POST | `/api/ptp/create` | Conductor | Record promise to pay |
+| PATCH | `/api/ptp/mark-paid` | Conductor | Mark promise fulfilled |
+| GET | `/api/ptp/active` | Admin | Active promises + countdowns |
+| GET | `/api/ptp/stats` | Admin | PTP success metrics |
 
 ---
 
-## Environment Variables
+⚙️ Environment Variables
 
-```env
+```bash
 # Server
 PORT=5000
 NODE_ENV=development
 FRONTEND_URL=http://localhost:5173
 
-# Database (3-tier fallback: Atlas → Local → In-Memory)
-MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/
+# Database (3-tier: Atlas → Local → In-Memory)
+MONGO_URI=mongodb+srv://<user>:<pass>@cluster.mongodb.net/transit-recovery
 
 # Auth
 JWT_SECRET=your_jwt_secret_here
 
-# AI
+# AI — free key at aistudio.google.com
 GEMINI_API_KEY=your_gemini_api_key_here
 
 # Payments
@@ -101,73 +227,79 @@ RAZORPAY_KEY_SECRET=your_razorpay_secret
 
 ---
 
-## Quick Start
+ 🚀 Quick Start
 
 ```bash
 # Clone
-git clone https://github.com/harish200522/transit-recovery.git
+git clone https://github.com/vsharishwaran-arch/transit-recovery.git
 cd transit-recovery
 
 # Backend
 cd backend
 npm install
-cp .env.example .env   # fill in your keys
-npm run dev            # starts on port 5000
+cp .env.example .env   # fill your keys
+npm run dev            # → localhost:5000
 
-# Seed data
+# Seed data (new terminal)
 node scripts/seedData.js
 
 # Frontend (new terminal)
 cd frontend
 npm install
-npm run dev            # starts on port 5173
+npm run dev            # → localhost:5173
 ```
 
 ---
 
-## Demo Credentials
+ 👤 Demo Credentials
 
-| Role | Employee ID | Password |
-|------|-------------|----------|
-| Admin | `TNSTC-ADMIN` | `admin123` |
-| Conductor | `TNSTC-2891` | `conductor123` |
-| Conductor | `TNSTC-3421` | `conductor123` |
-
----
-
-## Seed Data
-
-The seed script creates:
-- **5 Tamil Nadu bus routes** (47C Koyambedu→Tambaram, 21B Chennai Central→Guindy, 108 Madurai→Dindigul, 78A Coimbatore→Tiruppur, 15C Salem→Namakkal)
-- **4 users** (1 admin, 3 conductors)
-- **40 failed TicketSessions** (15 network handoff, 10 peak load, 8 low balance, 7 cancelled)
-- **5 demo RecoveryLogs** (2 sent, 1 recovered, 1 escalated, 1 skipped)
+| Role | Employee ID | Password | Access |
+|---|---|---|---|
+| Admin | `TNSTC-ADMIN` | `admin123` | Full dashboard + agent |
+| Conductor | `TNSTC-2891` | `conductor123` | Route 47C — TN01-AB-1234 |
+| Conductor | `TNSTC-3421` | `conductor123` | Route 21B — TN07-CD-5678 |
 
 ---
 
-## 3-Tier Database Fallback
+🌱 Seed Data
 
-| Tier | Connection | Log |
-|------|-----------|-----|
-| 1 | MongoDB Atlas (`MONGO_URI`) | ✅ MongoDB Atlas connected |
-| 2 | Local MongoDB (`localhost:27017`) | ✅ Local MongoDB connected (fallback) |
-| 3 | In-Memory MongoDB | ✅ In-Memory MongoDB connected (Demo Mode) |
-
----
-
-## Stopping Rules (Compliance Safeguards)
-
-| Rule | Condition | Action |
-|------|-----------|--------|
-| Already Recovered | Session has a `recovered` log | Skip |
-| Max Attempts | 3+ non-skipped logs | Skip |
-| Below Threshold | Amount < ₹50 | Skip |
-| Too Old | Created > 30 days ago | Skip |
-| Already Escalated | Has `escalated` log | Skip |
-| Escalation Trigger | 2+ `sent`/`failed` logs | Escalate |
+```
+5  Tamil Nadu routes (47C, 21B, 108, 78A, 15C)
+4  Users (1 admin, 3 conductors)
+45 TicketSessions:
+   15 × network_handoff (speed >40kmph)
+   10 × peak_load (overcrowded + timeout)
+   8  × insufficient_funds
+   7  × user_cancelled
+   5  × webhook_dropout (paid but no ticket)
+5  RecoveryLogs (demo history)
+8  PromiseToPay records (3 active, 2 paid, 2 expired, 1 escalated)
+```
 
 ---
 
-## Pitch
+ 🗣️ Pitch
 
-> "Tamil Nadu buses run on a government-mandated digital ticketing system. But UPI payments fail constantly — moving vehicles cause network handoffs, overcrowded buses create peak load timeouts, and passengers give up mid-payment. Every failed ticket is lost revenue for the government. I built an autonomous AI recovery agent that captures the vehicle context at the moment of failure, classifies the exact root cause — network handoff, peak load, or low balance — and generates a personalised recovery message in Hinglish or Tamil via Gemini. It processes batches of failed sessions with compliance stopping rules, escalates persistent failures to human review, and reports exactly how much revenue was recovered. The architecture is production-ready — only the simulated outcome needs to be replaced with a real payment webhook."
+> *"Tamil Nadu buses run on government-mandated digital ticketing.
+> But UPI payments fail constantly — moving vehicles cause network 
+> handoffs, overcrowded buses create peak load timeouts, and conductor 
+> terminal restarts cause webhook dropouts where the passenger is 
+> charged but gets no ticket. I faced this personally on August 28th.
+> I built an autonomous AI recovery agent that captures vehicle 
+> telemetry at the moment of failure, classifies the exact root cause,
+> and generates personalized recovery messages in Hinglish or Tamil 
+> via Gemini 1.5 Flash. It tracks verbal payment promises with live 
+> countdown timers, enforces 5 compliance stopping rules, escalates 
+> persistent failures to human review, and reports exactly how much 
+> revenue was recovered — closing the loop from detection to recovery."*
+
+---
+
+ 👨‍💻 Author
+
+**Harishwaran V S**  
+Final Year B.Tech — AI & Data Science  
+M. Kumarasamy College of Engineering, Karur  
+📧 vsharishwaran@gmail.com  
+🐙 [github.com/harish200522](https://github.com/harish200522)
+```
